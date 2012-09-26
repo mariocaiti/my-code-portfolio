@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<HEAD><TITLE>frogmath.js audition by Mario Caiti</Title>
+</head>
+<body>
+<div id="results"></div>
+<script type="text/javascript">
+document.getElementById('results').innerHTML='Thinking...';			//intro blurb, confirm page is working
+if (window.XMLHttpRequest) {
+	var data = new XMLHttpRequest();
+	var river=[];													//3d array for containing the river sections
+	var winner=[];													//will contain an index, all five optimized points and the total
+	data.open("GET", "riverdata.txt", true);						// open the textfile -> divide the text into data
+	data.onreadystatechange=function() {
+		if (data.readyState === 4) {  						// Makes sure the document is ready to parse.
+    		if (data.status === 200) {  					// Makes sure the file is there
+    			var blob=data.responseText;					//isolated this for troubleshooting - it definitely works
+			  	river=blob.split("\n");										//start by splitting river into sections - confirmed this works
+				var riverArea=[];											//will contain each section
+				var crossOptions=[];										//holder for each set of cross point data
+				var pointA=0;
+				var pointB=0;
+				var pointC=0;												//five values!
+				var pointD=0;
+				var pointE=0;
+				var possible=0;												//holder for subtotals of any 4
+				var bestpath=0;												//X index for the winning combo!
+				var winner=[];												//will contain all five optimized points
+				for(x=0; x<river.length; x++) {				
+				  	riverArea[x]=river[x].split(",");						//store this section of river in RiverArea #X
+				  											//if the sum is lower than the others found at this point, then this goes first
+				  	for(y=0; y<riverArea[x].length; y++) {
+				  		pointA=Math.round(Math.random()*riverArea[x].length);
+						pointB=Math.round(Math.random()*riverArea[x].length);
+						pointC=Math.round(Math.random()*riverArea[x].length);
+		  				pointD=Math.round(Math.random()*riverArea[x].length);
+		  				pointE=Math.round(Math.random()*riverArea[x].length);	//and no dups!
+		  				pointA!=pointB?1:pointB=Math.round(Math.random()*riverArea[x].length);
+			  			pointB!=pointC?1:pointC=Math.round(Math.random()*riverArea[x].length);
+			  			pointC!=pointD?1:pointD=Math.round(Math.random()*riverArea[x].length);
+			  			pointD!=pointE?1:pointE=Math.round(Math.random()*riverArea[x].length);
+						possible=parseInt(riverArea[x][pointA])+parseInt(riverArea[x][pointB])+parseInt(riverArea[x][pointC])+parseInt(riverArea[x][pointD])+parseInt(riverArea[x][pointE]);	//and store the numbers we are using to add for our results display
+		  				
+		  				do {
+		  					winner[0]=riverArea[x].length;	//and isolate the highest in it's own array
+		  					winner[1]=pointA;
+			  				winner[2]=pointB;
+			  				winner[3]=pointC;
+			  				winner[4]=pointD;
+			  				winner[5]=pointE;
+							bestpath=possible;
+		  					winner[6]=bestpath;
+			  			} while(possible<bestpath);
+			  		}			  																						
+		  		}
+		  	} else {	//no file!
+		  		document.getElementById('results').innerHTML="Sorry, no file.";
+		  	}
+		} else {	//the document is unreadable!
+//			document.getElementById('results').innerHTML="Sorry, the document is unreadable.";
+		}
+	}
+	data.send();
+	document.getElementById('results').innerHTML="The easiest path is at point "+winner[0]+" with a maximum score of "+winner[6]+". Start at "+winner[1]+" and end at "+winner[5]+".";
+}
+</script>
+</body>
+</html>

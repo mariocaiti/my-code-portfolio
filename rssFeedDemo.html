@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
+<head><title>RSS Feeds Demo</title><!-- bit.ly/-->
+<script type="text/javascript">
+if(!document.cookie) {
+	window.location="workshop_login.php?bounce=rssDemo";
+}
+function showRSS(str)
+{
+	if (str.length==0)
+  	{
+  		document.getElementById("rssOutput").innerHTML="Pick a stream!";
+  		return;
+  	}
+	if (window.XMLHttpRequest)
+  	{// code for IE7+, Firefox, Chrome, Opera, Safari
+  		xmlhttp=new XMLHttpRequest();
+  	}
+	else
+  	{// code for IE6, IE5
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  		document.getElementById("rssOutput").innerHTML="Your browser is out of date.";
+  	}
+	xmlhttp.onreadystatechange=function()
+  	{
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    	{
+    		document.getElementById("rssOutput").innerHTML=xmlhttp.responseText;
+    	}
+  	}
+	xmlhttp.open("GET","rssFeedDemo.php?q="+str,true);
+	xmlhttp.send();
+	document.getElementById("rssOutput").innerHTML="Now loading...";
+}
+</script>
+<link rel=stylesheet type="text/css" href="model.css">										<!-- declare css -->
+</head>
+<body class="rssdemo">
+
+<form class="rsspick">
+<select onchange="showRSS(this.value)">
+<option value="">Select an RSS-feed:</option>
+<option value="Slashdot">Slashdot</option>
+<option value="Craigslist">Craigslist</option>
+<option value="Netflix">Netflix</option>
+<option value="Savant">DVD Savant</option>
+<option value="Mandy">Mandy.com</option>
+</select>
+</form>
+<br />
+<div id="rssOutput">Pick above to list some news here.</div>
+</body>
+</html> 
