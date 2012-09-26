@@ -10,7 +10,7 @@ if (window.XMLHttpRequest) {
 	var data = new XMLHttpRequest();
 	var river=[];													//3d array for containing the river sections
 	var winner=[];													//will contain an index, all five optimized points and the total
-	data.open("GET", "riverdata.txt", true);						// open the textfile -> divide the text into data
+	data.open("GET", "riverdata.txt", true);					// open the textfile -> divide the text into data
 	data.onreadystatechange=function() {
 		if (data.readyState === 4) {  						// Makes sure the document is ready to parse.
     		if (data.status === 200) {  					// Makes sure the file is there
