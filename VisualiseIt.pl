@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 ##############################################################################
 #    VisualiseIt .02, copyright 2002 by Mario A Caiti    All rights reserved
-#      If you're reading this, you know the rules about open source. Edit at your own risk.  
+#  
 #    Very big thanks to the Authors of the below Modules, who made my work so much easier!
 ##############################################################################
 
