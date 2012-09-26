@@ -11,7 +11,7 @@ switch($q) {
 	$xml=("http://newyork.craigslist.org/jjj/index.rss");
 	break;
  	case "Netflix":
- 	$xml=("http://rss.netflix.com/QueueEDRSS?id=P5295295130861121214930881873538473");
+ 	$xml=("http://rss.netflix.com/QueueEDRSS?id=redacted");
  	break;
  	case "Savant":
  	$xml=("http://feeds.feedburner.com/dvdtalk");
