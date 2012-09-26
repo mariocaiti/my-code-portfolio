@@ -87,6 +87,6 @@ sub calctestUI
     $root->gridColumnconfigure(6, -weight=>0, -minsize=>35);
 } 
 $main=MainWindow->new();
-$main->title("A Calculator in perl/tk");
+$main->title("A Calculator in perl/tk by Mario Caiti");
 calctestUI($main);
 MainLoop();
