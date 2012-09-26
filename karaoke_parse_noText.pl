@@ -6,7 +6,10 @@
 #####################################
      
     use MIDI;
+<<<<<<< HEAD
     
+=======
+>>>>>>> New commit for Sept 26
     my $tune="Do You Wanna Know A Secret";
     #@lyric, @cues=karaoke();
     #open LYRIC, ">$tune _.html" || die;
@@ -25,9 +28,9 @@
             "include"=>\@MIDI::Event::Text_events
         }); 
         #@WDO NOT DUPLICATE. NOT FOR RENTAL.		0
-        #\nYou'll								551
-        #nev								63
-    #er								56	(ad nauseum)
+            #\nYou'll								551
+            #nev								63
+            #er								56	(ad nauseum)
         $y=0; $t=0;
         my(@lines, @q);
         # We use this header for use in Flash style CGI; for an HTML file, you can add appropraite tags here or
