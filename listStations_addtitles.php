@@ -1,7 +1,7 @@
 <?php										
 /* 	RSS FEED ENGINE - sorting is on HTML page, but unique identifiers have to go here
 	thanks to: http://digital-grief.com/programming/how-to-read-rss-feeds-with-php-and-jquery/ */
-$url = "http://rss.netflix.com/QueueEDRSS?id=P5295295130861121214930881873538473";/* ID needs to be dynamically loaded */
+$url = "http://rss.netflix.com/QueueEDRSS?id=redacted";/* ID needs to be dynamically loaded */
 $xml = simplexml_load_file($url);
  
 $feed_title = $xml->channel->title;
