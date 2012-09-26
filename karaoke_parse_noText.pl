@@ -6,7 +6,7 @@
 #####################################
      
     use MIDI;
-    #to be passed into function as reference-sorry, I mean sub as var. Use CGI for this?
+    
     my $tune="Do You Wanna Know A Secret";
     #@lyric, @cues=karaoke();
     #open LYRIC, ">$tune _.html" || die;
