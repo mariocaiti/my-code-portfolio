@@ -6,18 +6,17 @@ if(!document.cookie) {
 }
 function showRSS(str)
 {
-	if (str.length==0)
+	if (str.length==0)																	<!-- if nothing is selected, ask for a response -->
   	{
   		document.getElementById("rssOutput").innerHTML="Pick a stream!";
   		return;
   	}
 	if (window.XMLHttpRequest)
-  	{// code for IE7+, Firefox, Chrome, Opera, Safari
+  	{// code for all the modern browsers
   		xmlhttp=new XMLHttpRequest();
   	}
 	else
   	{// code for IE6, IE5
-  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
   		document.getElementById("rssOutput").innerHTML="Your browser is out of date.";
   	}
 	xmlhttp.onreadystatechange=function()
@@ -32,7 +31,7 @@ function showRSS(str)
 	document.getElementById("rssOutput").innerHTML="Now loading...";
 }
 </script>
-<link rel=stylesheet type="text/css" href="model.css">										<!-- declare css -->
+<link rel=stylesheet type="text/css" href="model.css">									<!-- declare css -->
 </head>
 <body class="rssdemo">
 

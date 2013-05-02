@@ -1,0 +1,104 @@
+<html>
+<head>
+<title>Walking guy in Javascript</title>
+</head>
+<body>
+<canvas id="canvas" height="300px" width="300px">
+<noscript>You need to enable Javascript if you're reading this.</noscript>
+</canvas>
+<script>
+var ctx = document.getElementById('canvas').getContext('2d');
+var xmov=150;		//thighs (knees)
+var ymov=200;
+var xmovR=150;
+var ymovR=200;
+var c_xmov=150;		/*calves (feet)*/
+var c_ymov=250;
+var c_xmovR=150;
+var c_ymovR=250;
+var legUp=true;	
+var arm_xmov=160;	//biceps (shoulders)
+var arm_ymov=120;
+var arm_xmovR=140;
+var arm_ymovR=120;
+var armUp=true;
+setInterval(function movinGuy() {
+	ctx.save();
+  	ctx.clearRect(0,0,400,400);
+  	ctx.lineWidth = 2;
+  	ctx.beginPath();
+  	ctx.moveTo(150,150);			//hip - remains constant
+  	ctx.lineTo(xmov,ymov);			//front foot, x ranges 100 to 200
+  	ctx.stroke();
+  	ctx.moveTo(150,150);			//hip - remains constant
+  	ctx.lineTo(xmovR,ymovR);		//rear foot, need to mirror steps
+  	ctx.stroke();					//CALVES
+	ctx.beginPath();
+	ctx.moveTo(xmov, ymov);
+	ctx.lineTo(c_xmov, c_ymov);
+	ctx.stroke();
+	ctx.moveTo(xmovR, ymovR);
+	ctx.lineTo(c_xmovR, c_ymovR);
+	ctx.stroke();
+	if(xmov==170) {					//front Thigh forward maxposition
+		legUp=false;
+		xmov-=2;
+		c_xmov-=4;
+		c_ymov-=2;
+		c_ymovR+=2;
+	}	
+	if(xmov==130) {					//and back max position
+		legUp=true;
+		xmov+=2;
+		c_xmov+=4;
+		c_ymov+=2;
+		c_ymovR-=2;
+	}
+	if(legUp) {						//kick forward
+		xmov+=2;
+		c_xmov+=4;
+		c_ymov+=2;
+		c_ymovR-=2;
+	}
+	else {							//kick back
+		xmov-=2;
+		c_xmov-=4;
+		c_ymov-=2;
+		c_ymovR+=2;
+	}								// and rear leg needs to go in reverse!
+	xmovR=150+(150-xmov);			// xmovR is the difference between 150 and xmov
+	c_xmovR=150+(150-c_xmov);		// same for calves
+  	ctx.beginPath();					//the head!
+	ctx.arc(150,40,25,0,Math.PI*2,true);
+	ctx.stroke();
+	ctx.beginPath();				
+	ctx.moveTo(150,150);				//hip - remains constant
+  	ctx.lineTo(150,63);					//torso
+  	ctx.moveTo(150,70);					//front arm: shoulders start at 70
+  	ctx.lineTo(arm_xmov,arm_ymov);
+  	ctx.moveTo(150,70);					//back arm
+  	ctx.lineTo(arm_xmovR,arm_ymovR);
+  	ctx.stroke();
+  	if(arm_xmov==160) {					//front leg moves forward
+		armUp=false;
+		arm_xmov--;
+	}	
+	if(arm_xmov==140) {
+		armUp=true;
+		arm_xmov++;
+	}
+	if(armUp) {
+		arm_xmov++;
+	}
+	else {
+		arm_xmov--;
+	}								// and rear leg needs to go in reverse!
+	arm_xmovR=150+(150-arm_xmov);	
+	//TODO FOREARMS
+	ctx.stroke();
+  	ctx.restore();
+}, 42);
+
+</script>
+</body>
+</html>
