@@ -1,6 +1,10 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
+A calculator for appraising your weekly budget and managing it towards financial goals you have on 
+an annual basis (vacations, continuing ed) 
+or in the future (children's education, retirement)
+
+README would normally document whatever steps are necessary to get the
 application up and running.
 
 Things you may want to cover:
