@@ -1,4 +1,4 @@
-== README
+== Visualize It 2.0
 
 A calculator for appraising your weekly budget and managing it towards financial goals you have on 
 an annual basis (vacations, continuing ed) 
