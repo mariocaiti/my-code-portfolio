@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>Visualize It!</title>
+<!-- Below is for ajax call security -->
+<%= javascript_include_tag "application" %>
+<%= javascript_include_tag "http://code.jquery.com/jquery-latest.js" %>
+<%= csrf_meta_tag %>
+</head>
+<body>
+<div id="intro">
+Welcome to Visualize It, a basic calculator that takes your weekly income and helps you plan your budget for both immediate 
+needs and long-term fun.
+<br>
+It's pay what you want, because you're obviously using this because you're broke :p but we hope you'll pay something. Details 
+follow at the end of your calculation run.<br>
+<br>
+<h2><span id="openCalc">OK, let's get started!</span></h2>
+<script type="text/javascript">
+$("#openCalc").click(function(){
+ 	$("#calculator").show().animate({opacity: 1},800);
+	$("#intro").hide();
+});
+</script>
+
+</div>
+<%= form_for(:plan, :url=>'/plan/new') do  %>
+<div id="calculator" class="calculator hidden">
+	<em>OK, how much do you make <b>weekly</b>?</em>						
+	$<%= number_field_tag :salary %>														
+	<h3><span id="more">Continue</span></h3>
+</div>
+
+<script type="text/javascript">
+$("#more").click(function(){
+	var chksalary=parseInt($("#salary").val());
+	if(isNaN(chksalary)){
+		alert("Please enter a valid number. Thank you.");
+	}else{
+		console.log("We entered a salary of $" + chksalary + ".");
+		$("#calculator").hide();
+		$("#subcalculator").html("\$" + parseInt($("#salary").val()) + ", good. Now we need a breakdown of what you spend on a <em>weekly</em> basis.<br>You know, divide your monthly bill by 4.<br>");
+		$("#subcalculator").append("Rent or mortgage: 											$<%= escape_javascript(number_field_tag :rent) %><br>");
+		$("#subcalculator").append("Groceries: 													$<%= escape_javascript(number_field_tag :groceries) %><br>");
+		$("#subcalculator").append("Your car, commute or other transportation: 					$<%= escape_javascript(number_field_tag :transportation) %><br>");
+		$("#subcalculator").append("Utilities: 													$<%= escape_javascript(number_field_tag :utilities) %><br>");
+		$("#subcalculator").append("Home entertainment, cable, internet, DVD subscriptions: 	$<%= escape_javascript(number_field_tag :homeEntertainment) %><br>");
+		$("#subcalculator").append("Kids' college fund: 										$<%= escape_javascript(number_field_tag :kids) %><br>");
+		$("#subcalculator").append("<h3><span id=\"moremore\">Continue</span></h3>");
+		$("#subcalculator").show().animate({opacity: 1},800);
+	}
+	$("#moremore").click(function(){
+		var mortgage=parseInt($("form input#rent").val());
+		var groceries=parseInt($("form input#groceries").val());
+		var transportation=parseInt($("form input#transportation").val());
+		var utilities=parseInt($("form input#utilities").val());
+		var homeEntertainment=parseInt($("form input#homeEntertainment").val());
+		var kids=parseInt($("form input#kids").val());
+		
+		var weeklyExpenses=mortgage+groceries+transportation+utilities+homeEntertainment+kids;
+	
+		console.log("Rent: $"+mortgage+"; Groceries: $"+groceries+"; Commute: $"+transportation+".");
+		console.log("Utilities: $"+utilities+"; Home Entertainment: $"+homeEntertainment+"; Kidz: $"+kids+".");
+		console.log("Grand total: $"+weeklyExpenses+". Compare with $" + parseInt($("#salary").val()) +".");
+		
+		if(weeklyExpenses>=parseInt($("#salary").val())) {
+			alert("You are spending more than you make! You must cut back on some expenses.");
+		} else {
+			console.log("Writing the sub-sub-calculator.");
+			$("#subcalculator").hide();
+			var weeklyBudget=parseInt($("#salary").val())-weeklyExpenses;
+			$("#sub_subcalculator").html("This leaves you with a weekly budget of $" + weeklyBudget + " to work with.<br>");
+			$("#sub_subcalculator").html("What are you saving and budgeting for? (Please enter an annual estimate)");
+			$("#sub_subcalculator").append("<br>Taking classes: 						$<%= escape_javascript(number_field_tag :classesBudget) %>");
+			$("#sub_subcalculator").append("<br>Vacations: 								$<%= escape_javascript(number_field_tag :vacBudget) %>");
+			$("#sub_subcalculator").append("<br>Social activities: 						$<%= escape_javascript(number_field_tag :socBudget) %>");
+			$("#sub_subcalculator").append("<br>Entertainment, night life, theater etc: $<%= escape_javascript(number_field_tag :entertainBudget) %>");
+			$("#sub_subcalculator").append("<br>Special life events, like a wedding: 	$<%= escape_javascript(number_field_tag :weddingBudget) %>");
+			$("#sub_subcalculator").append("<br>Health, exercise, sports: 				$<%= escape_javascript(number_field_tag :gymBudget) %>");
+			$("#sub_subcalculator").append("<br>Hobbies: 								$<%= escape_javascript(number_field_tag :hobbiesBudget) %>");
+			$("#sub_subcalculator").append("<br>What else? (we are working on this) 	$<%= escape_javascript(text_field_tag :userCreated) %>");
+			$("#sub_subcalculator").append("<%= escape_javascript link_to('Show me the budget.', '/plan/create') %>");
+			$("#sub_subcalculator").show().animate({opacity: 1},800);		
+		}
+	});
+});
+</script>
+
+<div id="subcalculator" class="subcalculator"></div>
+<div id="sub_subcalculator" class="sub_subcalculator"></div>
+<% end %>
+
+</body>
+</html>

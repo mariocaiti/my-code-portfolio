@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>Visualize It!</title>
+<!-- Below is for ajax call security -->
+<%= javascript_include_tag "application" %>
+<%= javascript_include_tag "http://code.jquery.com/jquery-latest.js" %>
+<%= csrf_meta_tag %>
+</head>
+<body>
+OK, here is a breakdown of what you should save on a <b>weekly</b> basis<br>
+for each item that you entered a value for in the saving and budgeting part of the calculator.<br>
+<br>
+<% plan.each do |p| %>
+	$<%= p.classesBudget %>	<br>
+	$<%= p.vacBudget %>	<br>
+	$<%= p.socBudget %>	<br>
+	$<%= p.entertainBudget %><br>	
+	$<%= p.weddingBudget %>	<br>
+	$<%= p.gymBudget %>	<br>
+	$<%= p.hobbiesBudget %>	<br>
+<% end %>
+<script type="text/javascript">
+console.log();
+</script>	
+</body>
+</html>
+<!-- 
+Completed 500 Internal Server Error in 57ms
+
+ActionView::Template::Error (stack level too deep):
+  app/helpers/plan_helper.rb:3
+  -->
