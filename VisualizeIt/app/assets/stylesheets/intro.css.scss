@@ -1,4 +1,22 @@
 // Place all the styles related to the Intro controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+/*
+SASS class notes
+meta:vp			//emmet for mobile
 
+Solarized for color picking
+
+use selector helpers and mixins! See Compass reference
+
+/components/sass is not /css !
+@import "myPartials"; => _myPartials.scss files in same folder as styles.scss
+@modules "someModules";
+
+$myColor	: #765765;
+font-size	: 1.#rem
+line-height	: #%;
+a {
+	&:hover {}
+}
+*/

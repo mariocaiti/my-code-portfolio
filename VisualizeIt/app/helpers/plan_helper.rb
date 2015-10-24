@@ -1,5 +1,5 @@
 module PlanHelper
 	def plan
-		@plan=plan
+		@plan=Plans.all
 	end
 end

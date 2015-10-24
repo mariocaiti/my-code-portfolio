@@ -1,15 +1,17 @@
 VisualizeIt::Application.routes.draw do
 	root :to => 'intro#index'
-	
-	get 'intro/index' => 'welcome#index', via: [:get, :post]
-	
-	get 'plan/new', to: 'intro#index'
-	get 'plan/create', to: 'plan#create'
+	resources :plan, controller: 'budget' do
+	# 	get 'intro/index' => 'welcome#index', via: [:get, :post]
+ 		get 'plan/new', to: 'budget#expenses'
+	# 	get 'plan/create', to: 'plan#create'
+	end
 end
-
-##      root GET /                      intro#index
-##	intro_index GET /intro/index(.:format) welcome#index
-##   plan_new GET /plan/new(.:format)    intro#index
-##	plan_create GET /plan/create(.:format) intro#index
-##  NEEDED? plan_edit GET /plan/edit(.:format)   plan#edit
-##	NEEDED? plan_update GET /plan/update(.:format) plan#update
+      # root GET    /                        intro#index
+# plan_index GET    /plan(.:format)          budget#index
+#            POST   /plan(.:format)          budget#create
+#   new_plan GET    /plan/new(.:format)      budget#new
+#  edit_plan GET    /plan/:id/edit(.:format) budget#edit
+#       plan GET    /plan/:id(.:format)      budget#show
+#            PATCH  /plan/:id(.:format)      budget#update
+#            PUT    /plan/:id(.:format)      budget#update
+#            DELETE /plan/:id(.:format)      budget#destroy

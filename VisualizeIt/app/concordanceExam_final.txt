@@ -1,0 +1,30 @@
+<?php
+/*	concordance test, started 3:15PM	*/
+$wordDB = fopen("/myTestfile.txt", "r");
+$allWords = preg_split('/[. ,?!;]/', $wordDB);	//list of all words in the word DB
+asort($allWords);
+foreach ($allWords as $word) {
+	if($word=="")	
+		$cleanWords = array_shift($allWords);
+	else
+		$cleanWords = $allWords;
+}
+
+$wordCount = 0;
+$wordConcordance = array();
+for($x=0; $x< count($cleanWords); $x++) {
+	if(strcmp($cleanWords[$x], $cleanWords[$x+1])==0) {
+		$wordCount++;
+	}
+	else {				// established instances of current word, push into array with count
+		array_push($wordConcordance, $cleanWords[$x], $wordCount);
+		$wordCount = 0;	//and reset
+	}
+}
+echo("\n wordConcordance\n");
+for($y=0; $y< count($wordConcordance); $y++) {
+	echo($wordConcordance[$y] . "\n");
+}
+
+/*	ended 5:15 PM	*/
+?>
