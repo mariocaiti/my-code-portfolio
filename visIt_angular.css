@@ -1,0 +1,161 @@
+span.toExpenses	{
+	background-color:#edefec;
+}
+div.enterExpenses	{
+	opacity: 0;
+}
+div.enterGoals		{
+	opacity: 0;
+}
+div.enterHomeBudget	{
+	background-color:#defdaa;
+}
+submit:hover			{
+	font-weight: bold;
+}
+div.enterRideBudget		{
+	background-color:#acaadb;
+}
+div.enterClassesBudget	{
+	background-color:#dfdaaa;
+}
+div.enterVacBudget		{
+	background-color:#acdadb;
+}
+div.enterSocBudget		{
+	background-color:#ddaadd;
+}
+div.enterEnterBudget	{
+	background-color:#abdccd;
+}
+div.enterWeddingBudget	{
+	background-color:#aaadec;
+}
+div.enterGymBudget		{
+	background-color:#dfdcbf;
+}
+div.enterNerdBudget	{
+	background-color:#dedcde;
+}
+p.goalEstabl		{
+	float: right;
+}
+.goalsChart	.div		 {
+	font: 10px sans-serif;
+	background-color: aqua;
+	text-align: right;	
+  	padding: 3px;
+  	margin: 1px;
+  	color: red;
+  	opacity:0;
+}
+div.houseBudgetResult	{
+	background-color:#defdaa;
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s;  
+
+  	opacity:0;
+}
+div.rideBudgetResult	{
+	background-color:#acaadb;
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s;  
+
+  	opacity:0;
+}
+div.classesBudgetResult	{
+	background-color:#dfdaaa;
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s;  
+
+  	opacity:0;
+}
+div.vacBudgetResult		{
+	background-color:#acdadb;
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s;  
+
+  	opacity:0;
+}
+div.socBudgetResult		{
+	background-color:#ddaadd;
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s;  
+
+  	opacity:0;
+}
+div.enterBudgetResult	{
+	background-color:#abdccd;
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s;  
+
+  	opacity:0;
+}
+div.weddingBudgetResult	{
+	background-color:#aaadec;
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s;  
+
+  	opacity:0;
+}
+div.gymBudgetResult		{
+	background-color:#dfdcbf;
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s;  
+
+  	opacity:0;
+}
+div.nerdBudgetResult	{
+	background-color:#dedcde;
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s;  
+
+  	opacity:0;
+}
+span					{
+	font: 15px sans-serif;
+	text-align: right;	
+		
+	-moz-transition: 4s;
+    -ms-transition: 4s;
+    -o-transition: 4s;
+    -webkit-transition: 4s;
+    transition: 4s; 
+}
+/*.ui-icon{
+    background-image: url(http://code.jquery.com/mobile/1.1.0/images/icons-18-black.png);
+}*/
+.footer				{
+	position: absolute;
+  	bottom: 0px !important;
+  	padding: 3px;
+  	margin: 10px;
+  	opacity:0;
+}
