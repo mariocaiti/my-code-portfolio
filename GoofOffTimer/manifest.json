@@ -1,0 +1,21 @@
+{
+	"manifest_version": 2,
+  	"name": "GoofOff Timer",
+  	"version": "0.1",
+  	"description": "Warns you about how much time you spend on time-wasting sites.",
+  	"browser_action": {
+  		"default_icon": "WebPelican_websafe.png",
+  		"default_popup": "bg.html"
+  	},
+  	"content_scripts": [
+    	{
+    		"matches": ["http://*/*", "https://*/*"], 
+    		"js": ["jquery-2.0.3.js", "bg.js"],
+    		"css": ["bg.css"]
+    	}
+  	],
+	"background":  {
+		"page": "bg.html"
+    },
+    "web_accessible_resources": ["sitesList.json"]
+}

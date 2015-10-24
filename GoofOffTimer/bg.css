@@ -1,0 +1,26 @@
+body.popup			{
+	width:320px; height:450px;
+}
+ul.badSites			{
+	color: white;
+	background-color: #fee
+}
+ul.goodSites		{
+	color: white;
+	background-color: #eef
+}
+div.myBadSites		{
+	position: absolute;
+	width:150px; height:280px;
+	top:2%; left:2%;
+}
+div.myGdSites		{
+	position: absolute;
+	width:150px; height:280px;
+	top:2%; left:50%;
+}
+div.footer			{
+	position: absolute;
+	width:300px; height:110px;
+	bottom:2%; left:2%;
+}

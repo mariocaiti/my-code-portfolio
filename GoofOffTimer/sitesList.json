@@ -1,0 +1,32 @@
+{
+	"badWebsites":	[	
+		{"badWebsite": "ninjakiwi.com"},
+		{"badWebsite": "armorgames.com"},
+		{"badWebsite": "buzzfeed.com"},
+		{"badWebsite": "xvideos.com"},
+		{"badWebsite": "facebook.com"},
+		{"badWebsite": "addictinggames.com"},
+		{"badWebsite": "loveshack.org"},
+		{"badWebsite": "hazcheeseburger.com"}
+	],
+	"goodWebsites":	[
+		{"goodWebsite": "lynda.com", 
+		"SiteDesc": "Lynda"},
+		{"goodWebsite": "ted.com", 
+		"SiteDesc": "Ted"},
+		{"goodWebsite": "psychologytoday.com", 
+		"SiteDesc": "a site to help with your depression"},
+		{"goodWebsite": "yourbrainonporn.com", 
+		"SiteDesc": "A site to help with your masturbation habit"},	
+		{"goodWebsite": "csmonitor.com", 
+		"SiteDesc": "Christian Science Monitor"},	
+		{"goodWebsite": "reuters.com", 
+		"SiteDesc": "Reuters"},
+		{"goodWebsite": "slimkicker.com", 
+		"SiteDesc": "A site to help you lose weight"},
+		{"goodWebsite": "harpers.org", 
+		"SiteDesc": "Harper's"},
+		{"goodWebsite": "superbetter.com", 
+		"SiteDesc": "Super Better!"}
+	]
+}
