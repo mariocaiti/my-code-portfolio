@@ -7,15 +7,23 @@
   		"default_icon": "WebPelican_websafe.png",
   		"default_popup": "bg.html"
   	},
-  	"content_scripts": [
+  	"permissions": [
+		"tabs", 
+		"http://*/*",
+		"https://*/*",
+		"unlimitedStorage", 
+		"background"],
+    "update_url": "chrome-extension://eldnhdlhgklgilbjipclpeahagmhlplb/bg.html",
+    "content_scripts": [
     	{
     		"matches": ["http://*/*", "https://*/*"], 
-    		"js": ["jquery-2.0.3.js", "bg.js"],
+    		"js": ["jquery-2.0.3.js", "bg.js", "timeMonitor.js", "manageSites.js"],
     		"css": ["bg.css"]
     	}
   	],
 	"background":  {
-		"page": "bg.html"
+		"scripts": ["bg.js", "timeMonitor.js", "manageSites.js"],
+		"persistent": false
     },
-    "web_accessible_resources": ["sitesList.json"]
+    "web_accessible_resources": ["sitesList.json", "bg.js", "timeMonitor.js", "manageSites.js"]
 }
