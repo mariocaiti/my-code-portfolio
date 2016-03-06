@@ -1,50 +1,19 @@
-/*	refer to sitesList.json	 jLint	*/
-
-window.onload = function() {
-	var writeGdSites = [];
-	var writeBadSites = [];
-	$.getJSON(chrome.extension.getURL('sitesList.json'), function (siteData) {		
-		
-		$.each(siteData, function(key, sites) {
-			$.each(sites, function(key, site) {
-				if(site.goodWebsite)
-					writeGdSites.push(site.goodWebsite);
-			});
-		});
-	
-		$.each(siteData, function(key, sites) {
-			$.each(sites, function(key, site) {
-				if(site.badWebsite)
-					writeBadSites.push(site.badWebsite);
-			});
-		});
-		var siteListContainer = [writeGdSites, writeBadSites];
-		chrome.runtime.sendMessage(siteListContainer, function(resp) {
-			console.log("Sending the info\n\t"+siteListContainer+"\nto the background script.");
-			(resp) 
-				? console.log("\tAnd it worked because we have a "+resp)
-				: console.log("But there was no response!");
-		});
-	});
-};
-
 function saveBadSite() {
 		// Get a new site entered, good or bad
-	var newBSite = addSite4Blocking.value;
+	var newBSite = document.getElementById("addSite4Blocking").value;
 		// Check that there's some code there.
-	if (!newBSite) {
+	if (!newBSite || newBSite==null) {	//neeed better regexp crunching
 		message('Error: No site entered.');
 		return;
 	}
-		// Save it using the Chrome extension storage API. NEEDS TO USE JSON
-	chrome.storage.local.set({'badWebsites': newBSite}, function() {
+	$.post(chrome.extension.getURL('sitesList.json'), newBSite, function (data, textStatus) {
 		// Notify that we saved.
-		message('You have added a site for time monitoring!');
-	});
+		message('Nice! You have added a site for time monitoring!');
+	}, "json");
 }
 function saveGoodSite() {
 		// Get a new site entered, good or bad
-	var newGSite = addQualitySite.value;
+	var newGSite = document.getElementById("addQualitySite").value;
 		// Check that there's some code there.
 	if (!newGSite) {
 		message('Error: No site entered.');

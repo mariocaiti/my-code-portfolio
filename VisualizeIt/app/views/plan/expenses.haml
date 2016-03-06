@@ -1,0 +1,36 @@
+%html
+    %head
+    	%title = "Add Expenses, then Financial Goals"
+
+	%body
+		#subcalculator.subcalculator
+		%p = "${salary}, good. Now we need a breakdown of what you spend on a {%em = weekly} basis.\nYou know, divide your monthly bill by 4."
+Rent or mortgage: 											$<%= number_field_tag :rent %><br>
+Groceries: 													$<%= number_field_tag :groceries %><br>
+Your car, commute or other transportation: 					$<%= number_field_tag :transportation %><br>
+Utilities: 													$<%= number_field_tag :utilities %><br>
+Home entertainment, cable, internet, DVD subscriptions: 	$<%= number_field_tag :homeEntertainment %><br>
+Kids' college fund: 										$<%= number_field_tag :kids %><br>
+<h3><span id=\"moremore\">Continue</span></h3>
+</div>
+<script type="text/javascript">
+	$("#moremore").click(function(){
+		$("#subcalculator").hide();
+		$("#sub_subcalculator").html("This leaves you with a weekly budget of $<%= escape_javascript(@expenses) %> to work with.<br>");
+		$("#sub_subcalculator").append("What are you saving and budgeting for? (Please enter an annual estimate)");
+		$("#sub_subcalculator").append("<br>Taking classes: 						$<%= escape_javascript(number_field_tag :classesBudget) %>");
+		$("#sub_subcalculator").append("<br>Vacations: 								$<%= escape_javascript(number_field_tag :vacBudget) %>");
+		$("#sub_subcalculator").append("<br>Social activities: 						$<%= escape_javascript(number_field_tag :socBudget) %>");
+		$("#sub_subcalculator").append("<br>Entertainment, night life, theater etc: $<%= escape_javascript(number_field_tag :entertainBudget) %>");
+		$("#sub_subcalculator").append("<br>Special life events, like a wedding: 	$<%= escape_javascript(number_field_tag :weddingBudget) %>");
+		$("#sub_subcalculator").append("<br>Health, exercise, sports: 				$<%= escape_javascript(number_field_tag :gymBudget) %>");
+		$("#sub_subcalculator").append("<br>Hobbies: 								$<%= escape_javascript(number_field_tag :hobbiesBudget) %>");
+		$("#sub_subcalculator").append("<br>What else? (we are working on this) 	$<%= escape_javascript(text_field_tag :userCreated) %>");
+		$("#sub_subcalculator").append("<%= escape_javascript link_to('Show me the budget.', '/plan/create') %>");
+		$("#sub_subcalculator").show().animate({opacity: 1},800);		
+	});
+});
+</script>
+<div id="sub_subcalculator" class="sub_subcalculator"></div>     
+</body>    
+</html>

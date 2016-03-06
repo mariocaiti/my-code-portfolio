@@ -1,6 +1,6 @@
 class SalaryController < ApplicationController
 	def new
-	#	@plan=Plan.new(params)
+		@salary=Salary.new(salary_params)
 	end
 	
 	def create
@@ -8,7 +8,7 @@ class SalaryController < ApplicationController
 			@salary=Salary.new(salary_params)
 			puts "\nSalary of #{@salary.inspect}"
 			if @salary.save
-				render '/budget/expenses'
+				render '/plan/expenses'
 			else
 				puts "No salary was recorded. Sorry. Please try again."
 			##	redirect_to root_url	##action: "new"	
@@ -17,5 +17,9 @@ class SalaryController < ApplicationController
 			puts "No salary was saved. Sorry."	# error is throwing here
 			redirect_to '/plan/new'
 		end
+	end
+	
+	def salary_params
+		salary.fetch(:salary, {})
 	end
 end

@@ -17,13 +17,17 @@
     "content_scripts": [
     	{
     		"matches": ["http://*/*", "https://*/*"], 
-    		"js": ["jquery-2.0.3.js", "bg.js", "timeMonitor.js", "manageSites.js"],
+    		"js": ["jquery-2.0.3.js", "popup.js", "manageSites.js"],
     		"css": ["bg.css"]
     	}
   	],
 	"background":  {
-		"scripts": ["bg.js", "timeMonitor.js", "manageSites.js"],
+		"scripts": ["bg.js", "manageSites.js"],
 		"persistent": false
     },
-    "web_accessible_resources": ["sitesList.json", "bg.js", "timeMonitor.js", "manageSites.js"]
+    "options_ui": {
+    	"page": "manager.html",
+    	"chrome_style": true
+    },
+    "web_accessible_resources": ["sitesList.json", "bg.js", "manageSites.js"]
 }

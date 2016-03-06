@@ -18,22 +18,7 @@ needs and long-term fun.
 It's pay what you want, because you're obviously using this because you're broke :p but we hope you'll pay something. Details 
 follow at the end of your calculation run.<br>
 <br>
-<h2><span id="openCalc">OK, let's get started!</span></h2>
-<script type="text/javascript">
-$("#openCalc").click(function(){
- 	$("#calculator").show().animate({opacity: 1},800);
-	$("#intro").hide();
-});
-</script>
-
-</div>
-<%= form_for(:plan, :url=>'/plan/new') do  %>
-<div id="calculator" class="calculator hidden">
-	<em>OK, how much do you make <b>weekly</b>?</em>						
-	$<%= number_field_tag :salary %>														
-	<h3><span id="more"><a href="/plan/new">Continue</a></span></h3>
-</div>
-<% end %>
-
+<h2><span id="openCalc"><a href="/plan/salary">OK, let's get started!</a></span></h2>
+<div>
 </body>
 </html>

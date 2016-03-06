@@ -5,11 +5,14 @@ class PlanController < ApplicationController
 	
 	def create
 		if @plan.save
-			render '/budget/expenses'
+			redirect_to '/plan/grid'
 		else
-			puts "No plan was recorded. Sorry. Please try again."
-		##	redirect_to root_url	##action: "new"	
+			puts 'Plan was not saved. Sorry.'
 		end
+	end
+	
+	def show
+
 	end
 	
 #	private 

@@ -1,12 +1,7 @@
 span.toExpenses	{
 	background-color:#edefec;
 }
-div.enterExpenses	{
-	opacity: 0;
-}
-div.enterGoals		{
-	opacity: 0;
-}
+/*  need to write a custom fade!	*/
 div.enterHomeBudget	{
 	background-color:#defdaa;
 }

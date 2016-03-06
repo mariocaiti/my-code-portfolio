@@ -1,8 +1,11 @@
 VisualizeIt::Application.routes.draw do
 	root :to => 'intro#index'
-	resources :plan, controller: 'budget' do
+	resources :plan, controller: 'plan' do
 	# 	get 'intro/index' => 'welcome#index', via: [:get, :post]
- 		get 'plan/new', to: 'budget#expenses'
+		get 'plan/salary', to: 'plan#salary'
+		get 'plan/expenses', to: 'plan#expenses'
+		get 'plan/budg', to: 'plan#budg'
+ 		get 'plan/new', to: 'plan#grid'
 	# 	get 'plan/create', to: 'plan#create'
 	end
 end

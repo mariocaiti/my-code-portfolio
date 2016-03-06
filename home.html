@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/2000/xhtml">
+<head>
+	<meta charset="utf-8">
+    <title>Weekly Scheduler in D3</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <!--script src="node_modules/moment/moment.js"></script				//much easier way to build the calendar-->
+    <script src="node_modules/moment/min/moment.min.js"></script>
+</head>
+<body>
+
+    <script type="text/javascript">   
+    var d = moment();
+    var hoursInDay = ["Mid", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", 
+    					"Noon", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"];
+    var monthsInYrToLog = ["Jan", "Feb", "March", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nvm", "Dec"];
+    var currentDays = ["Yesterday", "Today", "Tomorrow"];	
+    
+    var hrsGridWidth = document.body.clientWidth/32;
+    var dayGridWidth = document.body.clientWidth/10;	// 145px on my Macbook screen
+    var cellHeight = document.body.clientWidth/40;
+	
+	var startPt;
+	var newEvent;
+	var drawEvent;
+						/*	make grid of times on the left 	*/
+	var createWeeklyCalGrid = d3.select("body").append("div")
+		.attr('id', 'calRoot').attr('class', 'calRoot')
+		.style("width", hrsGridWidth)
+		.style("display", "inline-block");
+	var hrMarks = createWeeklyCalGrid.append("svg")
+		.attr('id', 'calDailyGrid').attr('class', 'calDailyGrid')	
+		.attr("width", hrsGridWidth)				
+		.attr("height", (cellHeight*24) + cellHeight)
+		.style("background", "none");
+	hrMarks.selectAll("text")
+		.data(hoursInDay).enter()
+		.append("text")
+			.text( function (d) { return d;})
+			.attr("width", hrsGridWidth)
+			.attr("height",function(d, i) {
+				return cellHeight + (cellHeight*i) + cellHeight;
+				})		 
+			.attr('x', hrsGridWidth/2)			
+			.attr('y', function(d, i) {
+				return cellHeight + (cellHeight*i) + (cellHeight/1.5);
+				})
+			.style("font-family", "arial")
+			.style("font-size", "1em")
+			.style("text-anchor", "middle");				
+	
+    makeCalWeekly();									// default		
+	d3.select("body")
+		.on('mousedown', function() {
+			startPt = [event.clientX, event.clientY];	// 		
+	//			console.log("This.x is "+this.x+", y is "+this.y+", width is "+this.width+", height is "+this.height+", id: "+this.id+"."); 
+			console.log("Mouse clicked at "+startPt+".");
+			newEvent = document.createElement("rect");	// this must be done old school!
+				newEvent.setAttribute("id", "event_mine");
+				newEvent.setAttribute("class", "event_mine");
+				newEvent.setAttribute("xmlns", 'http://www.w3.org/2000/svg');
+				
+				newEvent.setAttribute('position', 'fixed');
+			var alignBox = document.getElementsByClassName("hour_rect");	
+			for(var x=0; x<alignBox.length; x++) {
+				var alignSides = alignBox[x].getBoundingClientRect();
+				console.log("\tComparing "+alignSides.left+" with "+startPt[0]+" and "+alignSides.right+" with it as well.");
+				console.log("Also comparing "+alignSides.top+" with "+startPt[1]+" and "+alignSides.bottom+" with it as well.\n\tFrom "+alignBox[x].id);
+				if ( (alignSides.left < startPt[0]) && (alignSides.right > startPt[0]) &&
+						(alignSides.top < startPt[1]) && (alignSides.bottom > startPt[1]) ) {
+					var addTo = alignBox[x];
+					console.log("event_mine created as "+newEvent.id+". Adding over "+addTo.id );
+					alignBox[x].parentNode.insertBefore(newEvent, alignBox[x]);
+					break;	 
+				} 
+			}
+		})					//end onmousedown
+		.on('mouseup', function() {
+			var endPt = [event.clientX, event.clientY];
+			var eventDimensions = [startPt, endPt];
+			console.log("Mouse stopped at ["+endPt[0]+", "+endPt[1]+"].");
+
+			var dx = eventDimensions[0][0];
+				newEvent.setAttribute('top', dx);
+			var dy = eventDimensions[0][1];
+				newEvent.setAttribute('left', dy);
+				newEvent.setAttribute('z-index', '5');
+				
+			console.log("x is "+dx+"\nComparing "+dx+" and "+eventDimensions[1][0]);
+			if(dx < eventDimensions[1][0]) {
+				console.log("event_mine is "+eventDimensions[1][0] +" - "+dx+" px wide");
+				newEvent.setAttribute('width', eventDimensions[1][0] - dx);
+			} else {
+				var backwardWidth = dx;
+				dx = eventDimensions[1][0];
+				console.log("event_mine is made backwards. "+backwardWidth+" - "+dx+" px wide");
+				newEvent.setAttribute('width', backwardWidth - dx);
+			}
+			
+			console.log("And y is "+dy+"\nComparing "+dy+" and "+eventDimensions[1][1]);
+			if(dy < eventDimensions[1][1]) {
+				console.log("event_mine is "+eventDimensions[1][1]+" - "+dy+" px high");
+				newEvent.setAttribute('height', eventDimensions[1][1] - dy);
+			} else {
+				var downwardHt = dy;
+				dy = eventDimensions[1][1];
+				console.log("event_mine is made upside down. "+downwardHt+" - "+dy+" px high");
+				newEvent.setAttribute('height', downwardHt - dy);
+			}
+			newEvent.setAttribute('fill', 'green');
+		});					//end onmouseup										
+	function addDay (dayOfMo, dayOfWk) {
+						/*	HEADER for day we are on.  times below vert along the edge, this should be to the right!	*/
+		var createCalDate = d3.select("body").append("div")
+			.attr('id', 'calDay')
+			.attr('class', 'calDay')
+			.style("display", "inline")
+			.style("vertical-align", "top");
+		var addDayHeader = createCalDate.append("svg")
+			.attr('id', dayOfWk+'_dayHeader').attr('class', 'dayHeader')
+			.attr('x', hrsGridWidth)
+			.attr('y', 0)
+			.attr('width', dayGridWidth)
+			.attr('height', cellHeight + (cellHeight * 24))
+			.style("background", "none")
+			.style("vertical-align", "top")
+			.style("margin", "0.1px")
+			.style('stroke', 'black')
+			.style('stroke-width', '0.1px');
+												// once hours of week are all IDd then swap display days for TODAY, TOMORROW etc using currentDay vars
+		addDayHeader.append("text")
+			.text(dayOfWk)	
+			.attr('id', dayOfWk)								
+			.attr('x', dayGridWidth/2)
+			.attr('y', cellHeight*0.75)
+			.style("font-family", "arial")
+			.style("font-size", "1.7em")
+			.style("text-anchor", "middle");
+			
+ 		var addCellGrid = addDayHeader.selectAll("rect")
+			.data(hoursInDay)
+			.enter()
+			.append("g")
+				.attr('id', function(d, i) {
+					var hrGrID = 'hr_cell_'+d;
+					return hrGrID;
+					})
+			.append("rect")
+			.attr('id', function(d, i) {
+				var hrRectID = dayOfWk+'_'+d;
+				return hrRectID;
+				})
+			.attr('class', 'hour_rect')
+			.attr('x', 0)				
+			.attr('y', function(d, i) {
+				return (cellHeight*i) + (cellHeight/1.2);
+				})
+			.attr("width", dayGridWidth)		// these formulas should be functs to return a value based on 
+			.attr("height", cellHeight)			// the screen dimensions. just testing for my Macbook for now
+			.attr('fill', 'red')
+			.attr('fill-opacity', '0.01');		// end creation of the individual hour cells
+			
+	}									//end addDay() function
+    function makeCalWeekly () {
+    	var dayOfWk = 0;
+    	var dayOfMo = 0;
+    	for(var x=0; x<7; x++) {
+    		dayOfWk = d.day(x).format("dddd");	// set day of the month to today 
+    		console.log("current moment().day("+x+").format(weekday) is "+dayOfWk);
+    		if(x==d.day())
+    			dayOfMo = d.date();
+    		else
+    			dayOfMo = (x<d.day())
+					? d.date() - x
+					: d.date() + (x - d.date());    			
+    		console.log("current moment().date().format(day of month) is "+dayOfMo);
+    		addDay(dayOfMo, dayOfWk);
+    	}
+    	// once hours of week are all IDd then swap display days for TODAY, TOMORROW etc using currentDay vars
+    }
+    function memorizeSched () {
+    	//store in Mongo or local jSon?
+    }
+    </script>
+    
+</body>
+</html>
