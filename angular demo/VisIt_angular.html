@@ -37,8 +37,7 @@
 				<input type='number' 
 					ng-model='enterSalary' 
 					ng-model-options="{updateOn: 'blur'}" />
-				<button ng-show="enterSalary>0" id="toExpenses" ng-click="write_SalAcknowlegemt(enterSalary); showExpenses=true">&#x25BA;</button>
-<!-- <script type="text/javascript">$(document).on('click', '#toExpenses', function(){$("div.enterExpenses").animate({opacity: 1},800);});</script> -->
+				<button ng-show="enterSalary>0" ng-click="write_SalAcknowlegemt(enterSalary); showExpenses=true">&#x25BA;</button>
 			</div>
 		</form>
 		<form>
@@ -47,35 +46,36 @@
 				<br>Now we need a breakdown of what you spend on a <em>weekly</em> basis. Just divide your monthly bill by 4.<br>
 			
 				<div ng-repeat="t in myPlan.expenses">
-				<label>{{t.label}}</label>
-					<input type='number' step="0.01" min="0" 
-						ng-model="t.value"
-						ng-model-options="{updateOn: 'blur'}" 
-						ng-change="plan.setExpenseAmt(t.label, t.value); plan.makeBudget(t.action, weeklyExpenses)"/>
-					{{t.value | currency}}<br>
+				<ng-form name="updateExpense">
+					<label>{{t.label}}</label>
+						<input type='number' step="0.01" min="0" 
+							ng-model="t.value"
+							ng-model-options="{updateOn: 'blur'}" 
+							ng-change="myPlan.setExpenseAmt(t, t.value); myPlan.makeBudget(myPlan.salary, myPlan.weeklyExpenses)"/>
+						<span ng-bind="t.value | currency"></span><br>
+					</ng-form>
 				</div>
 				-----------------------------------------<br>
-				Weekly expenses: <span ng-bind="plan.getExpenses() | currency"></span><br>
-				<button ng-show="weeklyBudget>0" id="toGoals" ng-click="showGoals=true">&#x25BA;</button><br>
-<!-- <script type="text/javascript">$("#toGoals").click(function(){$("div.enterGoals").animate({opacity: 1},800);$("div.goalsChart div").animate({opacity: 1},800);$("footer").animate({opacity: 1},800);});</script>-->
+				Weekly expenses: <span ng-bind="myPlan.setWeeklyExpenses() | currency"></span><br>
+				<button ng-show="myPlan.setWeeklyExpenses() > 0" ng-click="showGoals=true">&#x25BA;</button><br>
 			</div>
 		</form>
 		<div id="enterGoals" class="col-lg-4 col-md-4 col-sm-12, enterGoals" ng-show="showGoals">
 			Then we are starting with a weekly budget of
-			<span ng-bind="weeklyBudget | currency"></span>
+			<span ng-bind="myPlan.makeBudget(myPlan.salary, myPlan.weeklyExpenses) | currency"></span>
 			to work with.
 			<br>
 			What are you saving and budgeting for? (Please enter an annual estimate, and we'll chop it into a weekly budget in the grid below.)
 			<br>
 			<div ng-repeat="g in myPlan.goals">	
 				<form class="enter{{g.name}}budget">
-					<submit ng-click="plan.setThisGoal(g.action, 'g.action')">
+					<submit ng-click="setThisGoal(g.action, 'g.action')">
 						<label>{{g.label}}</label>:
 					</submit>
 					<input type='number' step="0.01" min="0" 
 						ng-model='g.value'
 						ng-model-options="{updateOn: 'blur'}"/>
-					Test: goal[g].action is {{g}}
+					<!--Test: goal[g].action is {{g}}-->
 				</form>
 			</div>
 			<!--div class="enterHomeBudget">

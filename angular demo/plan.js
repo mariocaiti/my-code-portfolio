@@ -1,8 +1,5 @@
 visit_App
 .factory('plan', function (){
-	var weeklyExpenses = 0;
-	var weeklyBudget = 0;
-//	this.newPlan = function() <-- do in ctrler
 	return {
 		salary: 0,
 		setSalary: function (s) {
@@ -16,10 +13,25 @@ visit_App
 				value: v
 			});
 		},
-		getWeeklyExpenses: function () {
-			for (var e in plan.expensesBase) 
-				weeklyExpenses += e.value;
-			return weeklyExpenses;
+		setExpenseAmt: function (n, v) {
+			for (var e in this.expenses){
+				console.log(e+"\tExpense: \t"+this.expenses[e].label+"\t"+this.expenses[e].action+"\t"+this.expenses[e].value);
+				if (e == n) {
+					this.expenses[e].value = v;	console.log(e+"\tExpense updated to: \t"+this.expenses[e].label+"\t"+this.expenses[e].action+"\t"+this.expenses[e].value);
+					this.setWeeklyExpenses();
+					return this.expenses[e];
+				}
+			}
+		},
+		weeklyExpenses: 0,
+		setWeeklyExpenses: function () {
+			var eRecap = 0;
+			for (var e in this.expenses){
+				eRecap += this.expenses[e].value;
+			}
+			this.weeklyExpenses = eRecap;	
+			console.log("plan.weeklyExpenses is up to "+this.weeklyExpenses);
+			return this.weeklyExpenses;
 		},
 		goals: [],
 		newGoal: function (n, l, a, v, c) {
@@ -31,8 +43,10 @@ visit_App
 				chartName: c
 			});
 		},
-		makeBudget: function (eS, wE) {
-			weeklyBudget = eS - wE;
+		
+		weeklyBudget: 0,
+		makeBudget: function (wS, wE) {
+			weeklyBudget = wS - wE;
 			if (weeklyBudget<0)
 				alert("You are spending more than you make! Try your best to cut back on your planned expenses.");
 			else {

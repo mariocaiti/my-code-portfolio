@@ -42,15 +42,6 @@ visit_App.controller("mainController", ['$scope', 'plan', function($scope, plan)
 			console.log("\nSalary:\t"+plan.salary);
 		}
 	};
-	$scope.setExpenseAmt = function (l, v) {
-		for (var e in plan.expenses){
-			if (e.label == l) {
-				e.value = v;	console.log(e+"\tExpense updated to: \t"+e.label+"\t"+e.action+"\t"+e.value);
-				break;
-			}
-		}
-		return plan.expenses;
-	};
 	$scope.setThisGoal = function (gAmt, gNm) {	// needs to be set for EACH value in the goals obj. It's only firing once!!!
  		$scope.thisGoal = (gAmt/52);	
 		$scope.divNum = 0;
