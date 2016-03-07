@@ -31,200 +31,91 @@
 </header>
 <div id='calc' class='calc' ng-controller='mainController'>
 	<div ng-controller='mainController'>
-		<form>
-			<div id="enterSalary" class="col-lg-2 col-md-2 col-sm-12">
-				<label>What do you make weekly?</label>
-				<input type='number' 
-					ng-model='enterSalary' 
-					ng-model-options="{updateOn: 'blur'}" />
-				<button ng-show="enterSalary>0" ng-click="write_SalAcknowlegemt(enterSalary); showExpenses=true">&#x25BA;</button>
+		<div id="enterSalary" class="col-lg-2 col-md-2 col-sm-12">
+			<label>What do you make weekly?</label>
+			<input type='number' 
+				ng-model='enterSalary' 
+				ng-model-options="{updateOn: 'blur'}" />
+			<button ng-show="enterSalary>0" ng-click="write_SalAcknowlegemt(enterSalary); showExpenses=true">&#x25BA;</button>
+		</div>
+		<div id="enterExpenses" class="col-lg-6 col-md-6 col-sm-12, enterExpenses" ng-show="showExpenses">
+			<span ng-bind="myPlan.salary | currency"></span><span ng-bind="acknowledgement"></span>
+			<br>Now we need a breakdown of what you spend on a <em>weekly</em> basis. Just divide your monthly bill by 4.<br>
+		
+			<div ng-repeat="t in myPlan.expenses">
+			<ng-form name="updateExpense">
+				<label>{{t.label}}</label>
+					<input type='number' step="0.01" min="0" 
+						ng-model="t.value"
+						ng-model-options="{updateOn: 'blur'}" 
+						ng-change="myPlan.setExpenseAmt(t, t.value); myPlan.makeBudget()"/>
+					<span ng-bind="t.value | currency"></span><br>
+				</ng-form>
 			</div>
-		</form>
-		<form>
-			<div id="enterExpenses" class="col-lg-6 col-md-6 col-sm-12, enterExpenses" ng-show="showExpenses">
-				<span ng-bind="myPlan.salary | currency"></span><span ng-bind="acknowledgement"></span>
-				<br>Now we need a breakdown of what you spend on a <em>weekly</em> basis. Just divide your monthly bill by 4.<br>
-			
-				<div ng-repeat="t in myPlan.expenses">
-				<ng-form name="updateExpense">
-					<label>{{t.label}}</label>
-						<input type='number' step="0.01" min="0" 
-							ng-model="t.value"
-							ng-model-options="{updateOn: 'blur'}" 
-							ng-change="myPlan.setExpenseAmt(t, t.value); myPlan.makeBudget(myPlan.salary, myPlan.weeklyExpenses)"/>
-						<span ng-bind="t.value | currency"></span><br>
-					</ng-form>
-				</div>
-				-----------------------------------------<br>
-				Weekly expenses: <span ng-bind="myPlan.setWeeklyExpenses() | currency"></span><br>
-				<button ng-show="myPlan.setWeeklyExpenses() > 0" ng-click="showGoals=true">&#x25BA;</button><br>
-			</div>
-		</form>
+			-----------------------------------------<br>
+			Weekly expenses: <span ng-bind="myPlan.setWeeklyExpenses() | currency"></span><br>
+			<button ng-show="myPlan.setWeeklyExpenses() > 0" ng-click="showGoals=true">&#x25BA;</button><br>
+		</div>
 		<div id="enterGoals" class="col-lg-4 col-md-4 col-sm-12, enterGoals" ng-show="showGoals">
 			Then we are starting with a weekly budget of
-			<span ng-bind="myPlan.makeBudget(myPlan.salary, myPlan.weeklyExpenses) | currency"></span>
+			<span ng-bind="myPlan.makeBudget() | currency"></span>
 			to work with.
 			<br>
-			What are you saving and budgeting for? (Please enter an annual estimate, and we'll chop it into a weekly budget in the grid below.)
+			What are you saving and budgeting for? (Please enter a <b><em>weekly</em></b> estimate, clicking the button to move on ;))
 			<br>
 			<div ng-repeat="g in myPlan.goals">	
-				<form class="enter{{g.name}}budget">
-					<submit ng-click="setThisGoal(g.action, 'g.action')">
-						<label>{{g.label}}</label>:
+				<ng-form name="enter{{g.name}}Budget" class="enter{{g.name}}Budget">
+					<submit ng-click="myPlan.setGoal(g.value, g.action); showGoalGrid">
+						<label ng-bind="g.label"></label>:
 					</submit>
 					<input type='number' step="0.01" min="0" 
 						ng-model='g.value'
 						ng-model-options="{updateOn: 'blur'}"/>
 					<!--Test: goal[g].action is {{g}}-->
-				</form>
+				</ng-form>
 			</div>
-			<!--div class="enterHomeBudget">
-				<submit ng-click="setThisGoal(goals.expHome, 'expHome')">
-					Buying a home:
-				</submit>
-				<input type="number" step="0.01" min="0" ng-model='goals.expHome'/> 	
-			</div>	
-				<br>
-			<div class="enterRideBudget">
-				<submit ng-click="setThisGoal(goals.expRide, 'expRide')">
-					Buying a car, boat or plane:
-				</submit>
-				<input type="number" step="0.01" min="0" ng-model='goals.expRide'/> 	
-			</div>	
-				<br>
-			<div class="enterClassesBudget">
-				<submit ng-click="setThisGoal(goals.expClasses, 'expClasses')">
-					Taking classes:
-				</submit>
-				<input type="number" step="0.01" min="0" ng-model='goals.expClasses'/> 	
-			</div>	
-				<br>
-			<div class="enterVacBudget">
-				<submit ng-click="setThisGoal(goals.expVaca, 'expVaca')">
-					Vacations:
-				</submit>
-				<input type="number" step="0.01" min="0" ng-model='goals.expVaca'/>		
-			</div>	
-				<br>
-			<div class="enterSocBudget">
-				<submit ng-click="setThisGoal(goals.expSoc, 'expSoc')">
-					Social activities:
-				</submit>
-				<input type='number' step="0.01" min="0" ng-model='goals.expSoc'/> 				
-			</div>	
-				<br>
-			<div class="enterEnterBudget">
-				<submit ng-click="setThisGoal(goals.expNight, 'expNight')">
-					Entertainment, night life, theater etc:
-				</submit>
-				<input type='number' step="0.01" min="0" ng-model='goals.expNight'/> 			
-			</div>	
-				<br>
-			<div class="enterWeddingBudget">
-				<submit ng-click="setThisGoal(goals.expWedding, 'expWedding')">
-					Special life events, like a wedding:
-				</submit>
-				<input type='number' step="0.01" min="0" ng-model='goals.expWedding'/> 		
-			</div>	
-				<br>
-			<div class="enterGymBudget">
-				<submit ng-click="setThisGoal(goals.expGym, 'expGym')">
-					Health, exercise, sports:
-				</submit>
-				<input type='number' step="0.01" min="0" ng-model='goals.expGym'/> 					
-			</div>	
-				<br>
-			<div class="enterNerdBudget">
-				<submit ng-click="setThisGoal(goals.expNerd, 'expNerd')">
-					Hobbies:
-				</submit>
-				<input type='number' step="0.01" min="0" ng-model='goals.expNerd'/> 				
-			</div><br-->
 			What else? (we are working on this)
 			
 		</div>
 		
-	<!-- dynamic labels (graph from scratch!) here!!!-->
-		<div id="goalsChart" class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12, goalsChart" style="max-height:{{weeklyBudgetRevised | number:0}}px;" ng-show="showGoals">
-			<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
-				<span ng-bind="weeklyBudget | currency" ng-style="{'font-size' :weeklyBudget + 'px'}"></span> - 
-			</div>
-			<div class="visible-xs">
-			<br>
-			</div>
-			<div id="houseBudgetResult" class="col-lg-1 col-md-1 col-sm-1 col-xs-12, houseBudgetResult" ng-style="{'max-height' :(goals.expHome * 2) + 'px'}">
-				<span ng-show="goals.expHome<=weeklyBudget" ng-bind="goals.expHome | currency" ng-style="{'font-size' :goals.expHome + 'px'}"></span> - 
-			</div>
-			<div class="visible-xs">
-			<br>
-			</div>
-			<div id="rideBudgetResult" class="col-lg-1 col-md-1 col-sm-1 col-xs-12, rideBudgetResult" ng-style="{'max-height' :(goals.expRide * 2) + 'px'}">
-				<span ng-show="goals.expRide<=weeklyBudget" ng-bind="goals.expRide | currency" ng-style="{'font-size' :goals.expRide + 'px'}"></span> - 
-			</div>
-			<div class="visible-xs">
-			<br>
-			</div>
-			<div id="classesBudgetResult" class="col-lg-1 col-md-1 col-sm-1 col-xs-12, classesBudgetResult" ng-style="{'max-height' :(goals.expClasses * 2) + 'px'}">
-				<span ng-show="goals.expClasses<=weeklyBudget" ng-bind="goals.expClasses | currency" ng-style="{'font-size' :goals.expClasses + 'px'}"></span> - 
-			</div>
-			<div class="visible-xs">
-			<br>
-			</div>
-			<div id="vacBudgetResult" class="col-lg-1 col-md-1 col-sm-1 col-xs-12, vacBudgetResult" ng-style="{'max-height':(goals.expVaca * 2) + 'px'}">
-				<span ng-show="goals.expVaca<=weeklyBudget" ng-bind="goals.expVaca | currency" ng-style="{'font-size' :goals.expVaca + 'px'}"></span> - 
-			</div>
-			<div class="visible-xs">
-			<br>
-			</div>
-			<div id="socBudgetResult" class="col-lg-1 col-md-1 col-sm-1 col-xs-12, socBudgetResult" ng-style="{'max-height':(goals.expSoc * 2) + 'px'}">
-				<span ng-show="goals.expSoc<=weeklyBudget" ng-bind="goals.expSoc | currency" ng-style="{'font-size' :goals.expSoc + 'px'}"></span> - 
-			</div>
-			<div class="visible-xs">
-			<br>
-			</div>
-			<div id="enterBudgetResult" class="col-lg-1 col-md-1 col-sm-1 col-xs-12, enterBudgetResult" ng-style="{'max-height':(goals.expNight * 2) + 'px'}">
-				<span ng-show="goals.expNight<=weeklyBudget" ng-bind="goals.expNight | currency" ng-style="{'font-size' :goals.expNight + 'px'}"></span> - 
-			</div>
-			<div class="visible-xs">
-			<br>
-			</div>
-			<div id="weddingBudgetResult" class="col-lg-1 col-md-1 col-sm-1 col-xs-12, weddingBudgetResult" ng-style="{'max-height':(goals.expWedding * 2) + 'px'}">
-				<span ng-show="goals.expWedding<=weeklyBudget" ng-bind="goals.expWedding | currency" ng-style="{'font-size' :goals.expWedding + 'px'}"></span> - 
-			</div>
-			<div class="visible-xs">
-			<br>
-			</div>
-			<div id="gymBudgetResult" class="col-lg-1 col-md-1 col-sm-1 col-xs-12, gymBudgetResult" ng-style="{'max-height':(goals.expGym * 2) + 'px'}">
-				<span ng-show="goals.expGym<=weeklyBudget" ng-bind="goals.expGym | currency" ng-style="{'font-size' :goals.expGym + 'px'}"></span> - 
-			</div>
-			<div class="visible-xs">
-			<br>
-			</div>
-			<div id="nerdBudgetResult" class="col-lg-1 col-md-1 col-sm-1 col-xs-12, nerdBudgetResult" ng-style="{'max-height':(goals.expNerd * 2) + 'px'}">
-				<span ng-show="goals.expNerd<=weeklyBudget" ng-bind="goals.expNerd | currency" ng-style="{'font-size' :goals.expNerd + 'px'}"></span>
-			</div>
-			<div class="visible-xs">
-			<br>
+	<!-- dynamic labels (graph from scratch!) here!!! Has to adjust to weekly budgeting -->
+		<div id="goalsChart" 
+			class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12, goalsChart" 
+			style="max-height:{{myPlan.allGoalsBudget| number:0}}px;">
+			<div ng-repeat="r in myPlan.goals">
+				<div id="{{r.chartName}}" 
+					class="col-lg-1 col-md-1 col-sm-1 col-xs-12, {{r.chartName}}" 
+					ng-style="{'max-height' :(myPlan.goals[r].value / 25) + 'px'}"
+					ng-show="showGoalGrid">
+					<span ng-show="myPlan.goals[r].value >= 0" 
+							ng-bind="myPlan.goals[r].value | currency" 
+							ng-style="{'font-size' :(myPlan.goals[r].value / 50) + 'px'}"><!-- everything is weekly now, fix chart accordingly -->
+					</span> - 
+				</div>
+				<div class="visible-xs">
+				<br>
 			</div>
 			<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12"> 
-				= <span ng-bind="weeklyBudgetRevised | currency" ng-style="{'font-size' :weeklyBudgetRevised + 'px'}"></span>
+				= <span ng-bind="myPlan.allGoalsBudget | currency" ng-style="{'font-size' : (myPlan.allGoalsBudget / 50) + 'px'}"></span>
 			</div>
 		</div>
-		</form>
 	</div>	<!-- end mainController div-->
-	<br><br><br><br>
-<!-- TODO Paypal link, SAVE BUTTON -->
-	<footer id="myFooter" class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<br><b>So WTF is this?</b>
-		<br>I write versions of this calculator to learn a new language or platform, and this season AngularJS and Bootstrap are in. 
-		<br>I've also written this in Python 
-		<br>and <a href="clips/VisualiseIt_03.swf" target="_blank">Actionscript 3. Flash? Yes, Flash</a>.
-		<br>I look forward to doing Java for Android next, or maybe trying Ruby On Rails again which proved challenging. Which is the point...Maybe perl/tk?!
-		<br><a href="http://mariosphpworkshop.drupalgardens.com" target="_blank">I need a job</a>
-		
-	</footer>
-	
 </div>		<!-- end calc div-->
+	
+<br><br><br><br>
+
+<!-- TODO Paypal link, SAVE BUTTON -->
+
+<footer id="myFooter" class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<br><b>So WTF is this?</b>
+	<br>I write versions of this calculator to learn a new language or platform, and this season AngularJS and Bootstrap are in. 
+	<br>I've also written this in Python 
+	<br>and <a href="clips/VisualiseIt_03.swf" target="_blank">Actionscript 3. Flash? Yes, Flash</a>.
+	<br>I look forward to doing Java for Android and Swift for iOS next, 
+	<br>or maybe trying Ruby On Rails again which proved challenging. Which is the point...Maybe perl/tk?!
+	<br><a href="http://mariosphpworkshop.drupalgardens.com" target="_blank">I need a job</a>
+	
+</footer>
 
 </body>
 </html>

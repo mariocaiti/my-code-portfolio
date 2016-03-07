@@ -19,8 +19,8 @@ visit_App.controller("mainController", ['$scope', 'plan', function($scope, plan)
 		plan.newGoal("Wedding", "Special life events, like a wedding", "expWedding", 0, "weddingBudgetResult");
 		plan.newGoal("Gym", "Health, exercise, sports", "expGym", 0, "gymBudgetResult");
 		plan.newGoal("Nerd", "Hobbies", "expNerd", 0, "nerdBudgetResult");
-// 		for (var e in plan.expenses){	console.log(e+"\tExpense: \t"+plan.expenses[e].label+"\t"+plan.expenses[e].action+"\t"+plan.expenses[e].value);}
-// 		for (var g in plan.goals) {		console.log(g+"\tGoal:\t"+plan.goals[g].name+"\t"+plan.goals[g].label+"\t"+plan.goals[g].action+"\t"+plan.goals[g].value+"\t"+plan.goals[g].chartName);}
+ 		for (var e in plan.expenses){	console.log(e+"\tExpense: \t"+plan.expenses[e].label+"\t"+plan.expenses[e].action+"\t"+plan.expenses[e].value);}
+ 		for (var g in plan.goals) {		console.log(g+"\tGoal:\t"+plan.goals[g].name+"\t"+plan.goals[g].label+"\t"+plan.goals[g].action+"\t"+plan.goals[g].value+"\t"+plan.goals[g].chartName);}
 	};
 	if(plan.expenses.length == 0 && plan.goals.length == 0)
 		$scope.base();
@@ -41,41 +41,6 @@ visit_App.controller("mainController", ['$scope', 'plan', function($scope, plan)
 			
 			console.log("\nSalary:\t"+plan.salary);
 		}
-	};
-	$scope.setThisGoal = function (gAmt, gNm) {	// needs to be set for EACH value in the goals obj. It's only firing once!!!
- 		$scope.thisGoal = (gAmt/52);	
-		$scope.divNum = 0;
- 		if($scope.thisGoal > 0) {
- 			for(goalsList in $scope.goals) {	
- 				//		
- 				if(goals.hasOwnProperty(goalsList)) {
-					if(goalsList.name==gNm) {
-						goals[goalsList].Value=thisGoal.toFixed(2);	// this won't work w ng-change	
-					//	console.log("The "+goalsList+" value should now be "+this.thisGoal+" rounded to cents. This affects the div of "+this.chartDivs[this.divNum]+".");					
-					}
-					//console.log(goals+" has a property of "+goalsList+" and a value of "+goals[goalsList]+".");
-				}
-				else {
-					console.log(goals+" has no properties we can find.")
-				}
-				$scope.divNum += 1;
-			}
- 		}	
- 		$scope.allGoalsBudget(plan.goals);	
- 		return plan.goals;	
- 	};
- 		/* total set goals may not be more than weeklyBudget! */
-	$scope.allGoalsBudget = function (goalsRng) {	
-		$scope.weeklyBudgetRevised = plan.makeBudget;
-		for(goalRecrd in goalsRng) {
-			$scope.weeklyBudgetRevised -= goalsRng[goalRecrd].value;
-			console.log("weeklyBudgetRevised is "+plan.makeBudget+" minus "+goalsRng[goalRecrd].value+".");
-			if($scope.weeklyBudgetRevised<0) {
-				alert("You do not have enough budget to save for this goal. Please review your options.");
-				break;
-			}	
-		}
-		return $scope.weeklyBudgetRevised;
 	};
 }]);
 

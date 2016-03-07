@@ -2,34 +2,34 @@ span.toExpenses	{
 	background-color:#edefec;
 }
 /*  need to write a custom fade!	*/
-div.enterHomeBudget	{
+.enterHomeBudget	{
 	background-color:#defdaa;
 }
 submit:hover			{
 	font-weight: bold;
 }
-div.enterRideBudget		{
+.enterRideBudget		{
 	background-color:#acaadb;
 }
-div.enterClassesBudget	{
+.enterClassesBudget	{
 	background-color:#dfdaaa;
 }
-div.enterVacBudget		{
+.enterVacBudget		{
 	background-color:#acdadb;
 }
-div.enterSocBudget		{
+.enterSocBudget		{
 	background-color:#ddaadd;
 }
-div.enterEnterBudget	{
+.enterEnterBudget	{
 	background-color:#abdccd;
 }
-div.enterWeddingBudget	{
+.enterWeddingBudget	{
 	background-color:#aaadec;
 }
-div.enterGymBudget		{
+.enterGymBudget		{
 	background-color:#dfdcbf;
 }
-div.enterNerdBudget	{
+.enterNerdBudget	{
 	background-color:#dedcde;
 }
 p.goalEstabl		{
