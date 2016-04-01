@@ -1,141 +1,57 @@
-span.toExpenses	{
-	background-color:#edefec;
+div {
+	-moz-transition:0.7s;
+    -ms-transition:0.7s;
+    -o-transition:0.7s linear all;
+    -webkit-transition:0.7s;
+    transition:0.7s;  
+	opacity: 1;
 }
-/*  need to write a custom fade!	*/
-.enterHomeBudget	{
-	background-color:#defdaa;
+.enterExpenses.ng-hide, .showGoals.ng-hide, .goalsChart.ng-hide {
+	opacity: 0;
 }
-submit:hover			{
-	font-weight: bold;
+.enterExpenses.ng-show, .showGoals.ng-show, .goalsChart.ng-show {
+	display:block!important;
 }
-.enterRideBudget		{
-	background-color:#acaadb;
-}
-.enterClassesBudget	{
-	background-color:#dfdaaa;
-}
-.enterVacBudget		{
-	background-color:#acdadb;
-}
-.enterSocBudget		{
-	background-color:#ddaadd;
-}
-.enterEnterBudget	{
-	background-color:#abdccd;
-}
-.enterWeddingBudget	{
-	background-color:#aaadec;
-}
-.enterGymBudget		{
-	background-color:#dfdcbf;
-}
-.enterNerdBudget	{
-	background-color:#dedcde;
-}
-p.goalEstabl		{
-	float: right;
-}
-.goalsChart	.div		 {
-	font: 10px sans-serif;
-	background-color: aqua;
+.goalsChart			 {
 	text-align: right;	
   	padding: 3px;
   	margin: 1px;
-  	color: red;
-  	opacity:0;
 }
-div.houseBudgetResult	{
+
+.enterHomeBudget, .houseBudgetResult		{
 	background-color:#defdaa;
-	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s;  
-
-  	opacity:0;
 }
-div.rideBudgetResult	{
+.enterRideBudget, .rideBudgetResult			{
 	background-color:#acaadb;
-	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s;  
-
-  	opacity:0;
 }
-div.classesBudgetResult	{
+.enterClassesBudget, .classesBudgetResult	{
 	background-color:#dfdaaa;
-	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s;  
-
-  	opacity:0;
 }
-div.vacBudgetResult		{
+.enterVacBudget, .vacBudgetResult			{
 	background-color:#acdadb;
-	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s;  
-
-  	opacity:0;
 }
-div.socBudgetResult		{
+.enterSocBudget, .socBudgetResult			{
 	background-color:#ddaadd;
-	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s;  
-
-  	opacity:0;
 }
-div.enterBudgetResult	{
+.enterEnterBudget, .enterBudgetResult		{
 	background-color:#abdccd;
-	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s;  
-
-  	opacity:0;
 }
-div.weddingBudgetResult	{
+.enterWeddingBudget, .weddingBudgetResult	{
 	background-color:#aaadec;
-	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s;  
-
-  	opacity:0;
 }
-div.gymBudgetResult		{
+.enterGymBudget, .gymBudgetResult			{
 	background-color:#dfdcbf;
-	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s;  
-
-  	opacity:0;
 }
-div.nerdBudgetResult	{
+.enterNerdBudget, .nerdBudgetResult			{
 	background-color:#dedcde;
-	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s;  
-
-  	opacity:0;
 }
-span					{
-	font: 15px sans-serif;
+
+label:hover			{
+	font-weight: bold;
+}
+
+p					{
+	font-family: "Arial", sans-serif;
 	text-align: right;	
 		
 	-moz-transition: 4s;
@@ -144,6 +60,7 @@ span					{
     -webkit-transition: 4s;
     transition: 4s; 
 }
+
 /*.ui-icon{
     background-image: url(http://code.jquery.com/mobile/1.1.0/images/icons-18-black.png);
 }*/
@@ -153,4 +70,7 @@ span					{
   	padding: 3px;
   	margin: 10px;
   	opacity:0;
+}
+.showPyButton		{
+	background-color:#aaffaa;
 }

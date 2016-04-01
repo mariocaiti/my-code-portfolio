@@ -15,7 +15,7 @@ visit_App
 		},
 		setExpenseAmt: function (n, v) {
 			for (var e in this.expenses){
-				console.log(e+"\tExpense: \t"+this.expenses[e].label+"\t"+this.expenses[e].action+"\t"+this.expenses[e].value);
+			//	console.log(e+"\tExpense: \t"+this.expenses[e].label+"\t"+this.expenses[e].action+"\t"+this.expenses[e].value);
 				if (e == n) {
 					this.expenses[e].value = v;	//console.log(e+"\tExpense updated to: \t"+this.expenses[e].label+"\t"+this.expenses[e].action+"\t"+this.expenses[e].value);
 					this.setWeeklyExpenses();
@@ -29,8 +29,7 @@ visit_App
 			for (var e in this.expenses){
 				eRecap += this.expenses[e].value;
 			}
-			this.weeklyExpenses = eRecap;	
-		//	console.log("plan.weeklyExpenses is up to "+this.weeklyExpenses);
+			this.weeklyExpenses = eRecap;			//	console.log("plan.weeklyExpenses is up to "+this.weeklyExpenses);
 			return this.weeklyExpenses;
 		},
 		goals: [],
@@ -43,47 +42,39 @@ visit_App
 				chartName: c
 			});
 		},
-		setGoal: function (gAmt, gNm) {	// needs to be set for EACH value in the goals obj. It's only firing once!!!
-		//	var thisGoal = (gAmt/52);	
+		setGoal: function (gAmt, gNm) {	
 			var divNum = 0;
 			if(gAmt > 0) {
-				for(gl in this.goals) {	
-					if(this.goals.hasOwnProperty(gl)) {
-						if(this.goals[gl].action==gNm) {
-							this.goals[gl].value=gAmt.toFixed(2);	// this won't work w ng-change	
-							console.log("The "+this.goals[gl].name+" value should now be "+this.goals[gl].value+" rounded to cents.");					
+				if (this.makeBudget() < 0) 
+					alert("Sorry, but you do not have enough to save for this goal.");
+				else {
+					for(gl in this.goals) {	
+						if(this.goals.hasOwnProperty(gl)) {
+							if(this.goals[gl].action==gNm) {
+								this.goals[gl].value=parseFloat(gAmt).toFixed(2);	// this won't work w ng-change	
+								console.log("The "+this.goals[gl].name+" value should now be "+this.goals[gl].value+" while the weekly budget is "+this.weeklyBudget);					
+							}
 						}
-						//console.log(goals+" has a property of "+goalsList+" and a value of "+goals[goalsList]+".");
+						else {
+							console.log(this.goals+" has no properties we can find.")
+						}
+						divNum++;
 					}
-					else {
-						console.log(this.goals+" has no properties we can find.")
-					}
-					divNum++;
 				}
-			}	
-			this.allGoalsBudget();	
+			}		
 			return this.goals;	
 		},
 		weeklyBudget: 0,
 		makeBudget: function () {
-			weeklyBudget = this.salary - this.setWeeklyExpenses();
-			if (weeklyBudget<0)
+			if ( (this.salary - this.setWeeklyExpenses() ) < 0)
 				alert("You are spending more than you make! Try your best to cut back on your planned expenses.");
 			else {
-				return weeklyBudget;
+				this.weeklyBudget = this.salary - this.setWeeklyExpenses();
+				for(gr in this.goals) {
+					 this.weeklyBudget -= parseInt(this.goals[gr].value);					
+				}
+				return this.weeklyBudget;
 			}
-		},
-		allGoalsBudget: function () {	
-			var weeklyBudgetRevised = this.makeBudget();
-			for(gr in this.goals) {
-				weeklyBudgetRevised -= this.goals[gr].value;
-				console.log("weeklyBudgetRevised is "+this.makeBudget()+" minus "+this.goals[gr].value+".");
-				if(weeklyBudgetRevised<0) {
-					alert("You do not have enough budget to save for this goal. Please review your options.");
-					break;
-				}	
-			}
-			return weeklyBudgetRevised;
 		}
 	};
-});			//service or factory?
+});			

@@ -11,11 +11,11 @@
 </script>																		<!-- declare angular	-->
 <script src="maincontroller.js" type="text/javascript"></script>				<!-- root controller	-->
 <script src="plan.js" type="text/javascript"></script>							<!-- and the plan class file	-->
-<link href="bootstrap.min.css" rel="stylesheet">								<!-- declare bootstrap in bootstrap/css/ when live-->
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">								<!-- declare bootstrap in bootstrap/css/ when live-->
 <link href="visIt_angular.css" rel="stylesheet">								<!-- my custom CSS, rewrite in Sass or SCSS? -->
 </head>
 <body>
-<script src="bootstrap/js/bootstrap.min.js"></script>											<!-- declare bootstrap JS?? -->
+<script src="bootstrap/css/bootstrap.min.js"></script>										<!-- declare bootstrap JS for modal below -->
 <header id="myHeader" class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<div class="row, col-lg-2 col-md-2 col-sm-2 col-xs-4">
 	<a href="http://www.mariocaiti.com">
@@ -65,38 +65,36 @@
 			<br>
 			<div ng-repeat="g in myPlan.goals">	
 				<ng-form name="enter{{g.name}}Budget" class="enter{{g.name}}Budget">
-					<submit ng-click="myPlan.setGoal(g.value, g.action); showGoalGrid">
-						<label ng-bind="g.label"></label>:
-					</submit>
-					<input type='number' step="0.01" min="0" 
+					<label ng-bind="g.label"></label>:
+					<input type='number' step="0.01" min="0"
 						ng-model='g.value'
 						ng-model-options="{updateOn: 'blur'}"/>
-					<!--Test: goal[g].action is {{g}}-->
+					<submit ng-click="myPlan.setGoal(g.value, g.action)">
+						&#x25BA;
+					</submit>
 				</ng-form>
 			</div>
 			What else? (we are working on this)
-			
+				<!-- dynamic labels (graph from scratch!) here adjust to weekly budgeting -->
 		</div>
-		
-	<!-- dynamic labels (graph from scratch!) here!!! Has to adjust to weekly budgeting -->
 		<div id="goalsChart" 
 			class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12, goalsChart" 
-			style="max-height:{{myPlan.allGoalsBudget| number:0}}px;">
+			style="max-height:{{myPlan.weeklyBudget| number:0}}px;"
+			ng-show="showGoals">
 			<div ng-repeat="r in myPlan.goals">
 				<div id="{{r.chartName}}" 
 					class="col-lg-1 col-md-1 col-sm-1 col-xs-12, {{r.chartName}}" 
-					ng-style="{'max-height' :(myPlan.goals[r].value / 25) + 'px'}"
-					ng-show="showGoalGrid">
-					<span ng-show="myPlan.goals[r].value >= 0" 
-							ng-bind="myPlan.goals[r].value | currency" 
-							ng-style="{'font-size' :(myPlan.goals[r].value / 50) + 'px'}"><!-- everything is weekly now, fix chart accordingly -->
-					</span> - 
+					style="max-height:{{r.value | number:0}}px;">
+					<p style="font-size:{{r.value / 2 | number:0}}px;">
+						{{r.value | currency}} +
+					</p>  
 				</div>
 				<div class="visible-xs">
-				<br>
+					<br>
+				</div>
 			</div>
 			<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12"> 
-				= <span ng-bind="myPlan.allGoalsBudget | currency" ng-style="{'font-size' : (myPlan.allGoalsBudget / 50) + 'px'}"></span>
+				= <p ng-bind="myPlan.makeBudget() | currency" style="font-size:{{myPlan.makeBudget()| number:0}}px;"></p>
 			</div>
 		</div>
 	</div>	<!-- end mainController div-->
@@ -109,12 +107,37 @@
 <footer id="myFooter" class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<br><b>So WTF is this?</b>
 	<br>I write versions of this calculator to learn a new language or platform, and this season AngularJS and Bootstrap are in. 
-	<br>I've also written this in Python 
-	<br>and <a href="clips/VisualiseIt_03.swf" target="_blank">Actionscript 3. Flash? Yes, Flash</a>.
-	<br>I look forward to doing Java for Android and Swift for iOS next, 
-	<br>or maybe trying Ruby On Rails again which proved challenging. Which is the point...Maybe perl/tk?!
+	<br>I've also written this in
+		<a data-toggle="modal" data-target="#pyPopup">
+			Python
+		</a> 
+	and <a href="clips/VisualiseIt_03.swf" target="_blank">Actionscript 3. Flash? Yes, Flash</a>.
+	<br><b>UPDATED April 1 2016</b>. No foolin'... 
+	I remodeled the infrastructure to be factory class based and updated the graph to reflect a more modern Angular+CSS style. 
+	(we await version 2 with bated breath!)
+	<br>If you don't like to click View Source you can review my <a href="https://github.com/mariocaiti/my-code-portfolio">Github</a>. 
+	I've got lots of stuff there in various states of completion.
+	<br>I look forward to doing Java for Android and Swift for iOS next.
 	<br><a href="http://mariosphpworkshop.drupalgardens.com" target="_blank">I need a job</a>
-	
+	<!-- python code modal	-->
+	<div class="modal fade" id="pyPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearStage()"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">Visualize It in Python</h4>
+		  </div>
+		  <div class="modal-body">
+			<div id="pyCode" class="pyCode">
+				Add code here.
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearStage()">Close</button>
+		  </div>
+	   </div>	<!-- /.modal-content -->
+	  </div>	<!-- /.modal-dialog -->
+	</div>
 </footer>
 
 </body>

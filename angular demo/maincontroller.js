@@ -1,5 +1,6 @@
 var visit_App = angular.module('Visit_App',[]);	
-visit_App.controller("mainController", ['$scope', 'plan', function($scope, plan){
+visit_App
+.controller("mainController", ['$scope', 'plan', function($scope, plan){
 	$scope.intro = "Welcome to Visualize It, a basic calculator that takes your weekly income and helps you plan your budget for both immediate needs and long-term fun.";
 	$scope.myPlan = plan;	//for use on the view page
  	$scope.base = function () {
@@ -18,9 +19,7 @@ visit_App.controller("mainController", ['$scope', 'plan', function($scope, plan)
 		plan.newGoal("Enter", "Entertainment, night life, theater etc.", "expNight", 0, "enterBudgetResult");
 		plan.newGoal("Wedding", "Special life events, like a wedding", "expWedding", 0, "weddingBudgetResult");
 		plan.newGoal("Gym", "Health, exercise, sports", "expGym", 0, "gymBudgetResult");
-		plan.newGoal("Nerd", "Hobbies", "expNerd", 0, "nerdBudgetResult");
- 		for (var e in plan.expenses){	console.log(e+"\tExpense: \t"+plan.expenses[e].label+"\t"+plan.expenses[e].action+"\t"+plan.expenses[e].value);}
- 		for (var g in plan.goals) {		console.log(g+"\tGoal:\t"+plan.goals[g].name+"\t"+plan.goals[g].label+"\t"+plan.goals[g].action+"\t"+plan.goals[g].value+"\t"+plan.goals[g].chartName);}
+		plan.newGoal("Nerd", "Hobbies", "expNerd", 0, "nerdBudgetResult");		// 	for (var e in plan.expenses){	console.log(e+"\tExpense: \t"+plan.expenses[e].label+"\t"+plan.expenses[e].action+"\t"+plan.expenses[e].value);}for (var g in plan.goals) {		console.log(g+"\tGoal:\t"+plan.goals[g].name+"\t"+plan.goals[g].label+"\t"+plan.goals[g].action+"\t"+plan.goals[g].value+"\t"+plan.goals[g].chartName);}
 	};
 	if(plan.expenses.length == 0 && plan.goals.length == 0)
 		$scope.base();
@@ -43,11 +42,7 @@ visit_App.controller("mainController", ['$scope', 'plan', function($scope, plan)
 		}
 	};
 }]);
-
-//function plan()
-
-
-
+// credit for fix: http://jsfiddle.net/ABE8U/148/           or : http://jsfiddle.net/ABE8U/
 
 // MVVM - ask Martin Fowler
 /// ECMAScript will have integration w Angular 2 (coming soon!)
