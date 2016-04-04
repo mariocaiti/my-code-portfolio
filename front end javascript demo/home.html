@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/2000/xhtml">
+<head>
+	<meta charset="utf-8">
+    <title>Weekly Scheduler in Javascript: D3 with Moment and KnockoutJS, SCSS Styling</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <link href="cal.css" rel=stylesheet />												<!-- compiled via cal.scss	-->
+    <script src="node_modules/moment/min/moment.min.js"></script>						<!-- for the current time -->
+    <script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"></script>	<!-- and knockout JS for data binding -->
+</head>
+<body>
+
+    <script type="text/javascript">   
+    var d = moment();
+    var hoursInDay = ["Mid", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", 
+    					"Noon", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"];
+    var monthsInYrToLog = ["Jan", "Feb", "March", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nvm", "Dec"];
+    var currentDays = ["Yesterday", "Today", "Tomorrow"];	
+    
+    var hrsGridWidth = document.body.clientWidth/32;
+    var dayGridWidth = document.body.clientWidth/10;							// 145px on my Macbook screen
+    var cellHeight = document.body.clientWidth/40;
+	
+	var startPt, newEvent, drawEvent, eventCt;
+						/*	make grid of times on the left 	*/
+	var createWeeklyCalGrid = d3.select("body").append("div")
+		.attr('id', 'calRoot').attr('class', 'calRoot')
+		.style("width", hrsGridWidth);											//	.style("display", "inline-block");
+	var hrMarks = createWeeklyCalGrid.append("svg")
+		.attr('id', 'calDailyGrid').attr('class', 'calDailyGrid')	
+		.attr("width", hrsGridWidth)				
+		.attr("height", (cellHeight*24) + cellHeight);							//	.style("background", "none");
+	hrMarks.selectAll("text")
+		.data(hoursInDay).enter()
+		.append("text")
+			.text( function (d) { return d;})
+			.attr("width", hrsGridWidth)
+			.attr("height",function(d, i) {
+				return cellHeight + (cellHeight*i) + cellHeight;
+				})		 
+			.attr('x', hrsGridWidth/2)			
+			.attr('y', function(d, i) {
+				return cellHeight + (cellHeight*i) + (cellHeight/1.5);
+				});																// .style("font-family", "arial").style("font-size", "1em").style("text-anchor", "middle");				
+	
+    makeCalWeekly();															// default	
+    var timeEventHeader = '<p>';												// must NOT create a new event within another event! below is boolean to prevent this
+	var OKtoGoHere = false;
+    														
+	d3.select("body")
+		.on('mousedown', function (){
+			startPt = [event.clientX, event.clientY];							// console.log("This.x is "+this.x+", y is "+this.y+", width is "+this.width+", height is "+this.height+", id: "+this.id+"."); 
+			console.log("Mouse clicked at "+startPt+" over "+event.target.id+".");		
+			if (eventCt == null || eventCt == undefined) {
+				eventCt = 0;
+			}
+			if (eventCt == 0) {
+				OKtoGoHere = true;	console.log("First item.");
+			} else { 
+				var addEvent = document.querySelectorAll('.event_mine, .timeSpanMsg, .make_event, .make_event_txtarea, .make_event_sbmtButn');		
+				for (var p=0; p < addEvent.length; p++) {
+					OKtoGoHere = true;
+					console.log("addEvent["+p+"].id is "+addEvent[p].id+". Checking against "+event.target.id+".");
+					if (addEvent[p].id.toString() == event.target.id.toString()) {
+						OKtoGoHere = false;											
+						break;
+					}
+					console.log("OKtoGoHere is "+OKtoGoHere);
+				}	
+			}
+			if (OKtoGoHere == true) {
+				newEvent = document.createElement("div");							// this must be done old school!
+					newEvent.setAttribute("id", "event_mine"+eventCt);
+					newEvent.setAttribute("class", "event_mine");
+					newEvent.setAttribute("xmlns", 'http://www.w3.org/2000/svg');
+					newEvent.style.left = startPt[0]+'px';
+					newEvent.style.top = startPt[1]+'px';
+					newEvent.style.zIndex=eventCt+5;								// scale in order	// console.log("event_mine created as "+newEvent.id+". Adding to the body:" );
+				document.body.appendChild(newEvent);
+		
+				var startTime = document.createElement("span");
+					startTime.setAttribute("id", "timeSpanMsg"+eventCt);
+					startTime.setAttribute("class", "timeSpanMsg");
+		
+				newEvent.appendChild(startTime);
+				timeEventHeader += writeEventTime(startPt)+' - ';	
+			}	
+		})					//end onmousedown
+							// need an onmousemove function to show drawing
+		.on('mouseup', function() {
+			var endPt = [event.clientX, event.clientY];
+			var eventDimensions = [startPt, endPt];
+			console.log("Mouse stopped at ["+endPt[0]+", "+endPt[1]+"].");			//	top (x) and left (y) are declared by the mousedown function so don't declare here!
+ 			var dx = eventDimensions[0][0];
+ 			var dy = eventDimensions[0][1];
+			if (OKtoGoHere == true) {	
+				console.log("x is "+dx+"\nComparing "+dx+" and "+eventDimensions[1][0]);
+				if(dx < eventDimensions[1][0]) {
+					console.log("event_mine is "+eventDimensions[1][0] +" - "+dx+" px wide");
+					newEvent.style.width = (eventDimensions[1][0] - dx)+'px';		
+				} else {
+					var backwardWidth = dx;
+					dx = eventDimensions[1][0];
+					console.log("event_mine is made backwards. "+backwardWidth+" - "+dx+" px wide");
+					newEvent.style.width = (backwardWidth - dx)+'px';
+				}
+			
+				console.log("And y is "+dy+"\nComparing "+dy+" and "+eventDimensions[1][1]);
+				if(dy < eventDimensions[1][1]) {
+					console.log("event_mine is "+eventDimensions[1][1]+" - "+dy+" px high");
+					newEvent.style.height = (eventDimensions[1][1] - dy)+'px';	
+				} else {
+					var downwardHt = dy;
+					dy = eventDimensions[1][1];
+					console.log("event_mine is made upside down. "+downwardHt+" - "+dy+" px high");
+					newEvent.style.height = (downwardHt - dy)+'px';
+				}
+				var endTime = document.getElementById("timeSpanMsg"+eventCt);
+				timeEventHeader += writeEventTime(endPt) + '</p>';
+				endTime.innerHTML = timeEventHeader;
+				
+				var todo = document.createElement("span");
+					todo.setAttribute("id", "todo_"+eventCt);
+					todo.setAttribute("class", "todo");
+					todo.setAttribute("data-bind", "text: typeTodo");
+				newEvent.appendChild(todo);
+				
+				var makeEvent = document.createElement("form");
+					makeEvent.setAttribute("id", "make_event"+eventCt);
+					makeEvent.setAttribute("class", "make_event");
+					var descEvent = document.createElement("textarea");
+						descEvent.setAttribute("id", "make_event_txtarea"+eventCt);
+						descEvent.setAttribute("class", "make_event_txtarea");
+						descEvent.setAttribute("placeholder", "What do you regularly do now?");
+						descEvent.setAttribute("data-bind", "textInput: typeTodo");	
+					makeEvent.appendChild(descEvent);
+					var cnfEventDesc = document.createElement("button");			//this can toggle show/hide the textarea
+						cnfEventDesc.setAttribute("id", "make_event_sbmtButn"+eventCt);
+						cnfEventDesc.setAttribute("class", "make_event_sbmtButn");
+						cnfEventDesc.setAttribute("type", "button");
+						cnfEventDesc.setAttribute("value", "Save");
+					makeEvent.appendChild(cnfEventDesc);
+				var thisEvent = document.getElementById("event_mine"+eventCt);
+				function vModel (){
+					this.typeTodo = ko.observable('');
+				};
+			  	var vm = new vModel();
+			   	ko.applyBindings(vm);
+				thisEvent.appendChild(makeEvent);
+				timeEventHeader = '<p>';											//reset
+				eventCt++;															//	writeTodoInfo();<- replaced by knockoutJS binding
+			}
+		});																			//end onmouseup	
+/*	function writeTodoInfo () {
+		var eventsList = document.getElementsByClassName("event_mine");
+		for (var e in eventsList) {
+			var formParts = eventsList[e].children;											//	for (var f in formParts) {console.log("formParts["+f+"].id is "+formParts[f].id);}
+			var thisTodo = formParts[1].id.toString();
+			var thisTodoWriter = formParts[2].id.toString();
+			var thisTodoWriterResult = document.getElementById(thisTodoWriter).children[0].id.toString();
+			console.log("thisTodo is "+thisTodo+". thisTodoWriter is "+thisTodoWriter+", and thisTodoWriterResult is "+thisTodoWriterResult);	// 	for (var d in document.getElementById(thisTodoWriter).children) {console.log("thisTodoWriter -> children["+d+"].id is "+document.getElementById(thisTodoWriter).children[d].id);}
+			document.getElementById(thisTodo).innerHTML = '<p>' 
+				+ document.getElementById(thisTodoWriterResult).value 
+				+ '</p>';			//e.preventDefault();
+		}
+	}	*/
+	function writeEventTime (t) {
+		var alignBox = document.getElementsByClassName("hour_rect");	
+		for(var x=0; x<alignBox.length; x++) {
+			var alignSides = alignBox[x].getBoundingClientRect();
+// 			console.log("\tComparing "+alignSides.left+" with "+t[0]+" and "+alignSides.right+" with it as well.");
+// 			console.log("Also comparing "+alignSides.top+" with "+t[1]+" and "+alignSides.bottom+" with it as well.\n\tFrom "+alignBox[x].id);
+			if ( (alignSides.left < t[0]) && (alignSides.right > t[0]) && (alignSides.top < t[1]) && (alignSides.bottom > t[1]) ) {
+				var thisHr = alignBox[x].id;
+				var thisTimeFormat = thisHr.replace(/_/i,' ');	//parse Day of Week (remove underscore) and Hr
+				return thisTimeFormat;	 
+			} 
+		}
+	}								
+	function addDay (dayOfMo, dayOfWk) {
+						/*	HEADER for day we are on.  times below vert along the edge, this should be to the right!	*/
+		var createCalDate = d3.select("body").append("div")
+			.attr('id', 'calDay')
+			.attr('class', 'calDay');
+		var addDayHeader = createCalDate.append("svg")
+			.attr('id', dayOfWk+'_dayHeader').attr('class', 'dayHeader')
+			.attr('x', hrsGridWidth)
+			.attr('y', 0)
+			.attr('width', dayGridWidth)
+			.attr('height', cellHeight + (cellHeight * 24));	// 		.style("background", "none").style("vertical-align", "top").style("margin", "0.1px").style('stroke', 'black').style('stroke-width', '0.1px');
+												// once hours of week are all IDd then swap display days for TODAY, TOMORROW etc using currentDay vars
+		addDayHeader.append("text")
+			.text(dayOfWk)	
+			.attr('id', dayOfWk)								
+			.attr('x', dayGridWidth/2)
+			.attr('y', cellHeight*0.75);						// 	.style("font-family", "arial").style("font-size", "1.7em").style("text-anchor", "middle");
+			
+ 		var addCellGrid = addDayHeader.selectAll("rect")
+			.data(hoursInDay)
+			.enter()
+			.append("g")
+				.attr('id', function(d, i) {
+					var hrGrID = 'hr_cell_'+d;
+					return hrGrID;
+					})
+			.append("rect")
+			.attr('id', function(d, i) {
+				var hrRectID = dayOfWk+'_'+d;
+				return hrRectID;
+				})
+			.attr('class', 'hour_rect')
+			.attr('x', 0)				
+			.attr('y', function(d, i) {
+				return (cellHeight*i) + (cellHeight/1.2);
+				})
+			.attr("width", dayGridWidth)		// these formulas should be functs to return a value based on 
+			.attr("height", cellHeight)			// the screen dimensions. just testing for my Macbook for now
+			.attr('fill', 'red')
+			.attr('fill-opacity', '0.01');		// end creation of the individual hour cells
+			
+	}											//end addDay() function
+    function makeCalWeekly () {
+    	var dayOfWk = 0;
+    	var dayOfMo = 0;
+    	for(var x=0; x<7; x++) {
+    		dayOfWk = d.day(x).format("dddd");	// set day of the month to today 	//	console.log("current moment().day("+x+").format(weekday) is "+dayOfWk);
+    		if(x==d.day())
+    			dayOfMo = d.date();
+    		else
+    			dayOfMo = (x<d.day())
+					? d.date() - x
+					: d.date() + (x - d.date()); 									//	console.log("current moment().date().format(day of month) is "+dayOfMo);
+    		addDay(dayOfMo, dayOfWk);
+    	}										// once hours of week are all IDd then swap display days for TODAY, TOMORROW etc using currentDay vars
+    }
+    function memorizeSched () {
+    	//store in Mongo or local jSon?
+    }
+    </script>
+    
+</body>
+</html>
