@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/2000/xhtml">
 <head>
 	<meta charset="utf-8">
-    <title>Weekly Scheduler in Javascript: D3 with Moment and KnockoutJS, SCSS Styling</title>
+    <title>Weekly Scheduler by Mario Caiti</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
     <link href="cal.css" rel=stylesheet />												<!-- compiled via cal.scss	-->
     <script src="node_modules/moment/min/moment.min.js"></script>						<!-- for the current time -->
@@ -17,11 +17,20 @@
     var monthsInYrToLog = ["Jan", "Feb", "March", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nvm", "Dec"];
     var currentDays = ["Yesterday", "Today", "Tomorrow"];	
     
-    var hrsGridWidth = document.body.clientWidth/32;
-    var dayGridWidth = document.body.clientWidth/10;							// 145px on my Macbook screen
-    var cellHeight = document.body.clientWidth/40;
+    var wide = (window.innerWidth >= 640)
+    	? document.body.clientWidth						// laptops and big screens
+    	: document.body.clientWidth * 2;				// small devices
+    var hrsGridWidth = wide/32;
+    var dayGridWidth = wide/10;							// 145px on my Macbook screen
+    var cellHeight = wide/40;
 	
 	var startPt, newEvent, drawEvent, eventCt;
+	var intro = "Thank you for trying a basic weekly calendar I built. Click and drag over the grid to make a weekly appointment.";
+	var introStructions = d3.select("body").append("div")
+		.attr('id', 'intro')
+		.attr('class', 'intro')
+		.append("text")
+			.text(intro);
 						/*	make grid of times on the left 	*/
 	var createWeeklyCalGrid = d3.select("body").append("div")
 		.attr('id', 'calRoot').attr('class', 'calRoot')
@@ -43,7 +52,7 @@
 				return cellHeight + (cellHeight*i) + (cellHeight/1.5);
 				});																// .style("font-family", "arial").style("font-size", "1em").style("text-anchor", "middle");				
 	
-    makeCalWeekly();															// default	
+    makeCal();																	// write days here
     var timeEventHeader = '<p>';												// must NOT create a new event within another event! below is boolean to prevent this
 	var OKtoGoHere = false;
     														
@@ -68,7 +77,7 @@
 					console.log("OKtoGoHere is "+OKtoGoHere);
 				}	
 			}
-			if (OKtoGoHere == true) {
+			if (OKtoGoHere == true && writeEventTime(startPt) !== false && writeEventTime(startPt) !== 'undefined') {
 				newEvent = document.createElement("div");							// this must be done old school!
 					newEvent.setAttribute("id", "event_mine"+eventCt);
 					newEvent.setAttribute("class", "event_mine");
@@ -83,74 +92,96 @@
 					startTime.setAttribute("class", "timeSpanMsg");
 		
 				newEvent.appendChild(startTime);
-				timeEventHeader += writeEventTime(startPt)+' - ';	
-			}	
-		})					//end onmousedown
-							// need an onmousemove function to show drawing
-		.on('mouseup', function() {
-			var endPt = [event.clientX, event.clientY];
-			var eventDimensions = [startPt, endPt];
-			console.log("Mouse stopped at ["+endPt[0]+", "+endPt[1]+"].");			//	top (x) and left (y) are declared by the mousedown function so don't declare here!
- 			var dx = eventDimensions[0][0];
- 			var dy = eventDimensions[0][1];
-			if (OKtoGoHere == true) {	
-				console.log("x is "+dx+"\nComparing "+dx+" and "+eventDimensions[1][0]);
-				if(dx < eventDimensions[1][0]) {
-					console.log("event_mine is "+eventDimensions[1][0] +" - "+dx+" px wide");
-					newEvent.style.width = (eventDimensions[1][0] - dx)+'px';		
-				} else {
-					var backwardWidth = dx;
-					dx = eventDimensions[1][0];
-					console.log("event_mine is made backwards. "+backwardWidth+" - "+dx+" px wide");
-					newEvent.style.width = (backwardWidth - dx)+'px';
+			//	timeEventHeader += writeEventTime(startPt)+' - ';	
+				d3.select("body")
+					.on('mousemove', function() {
+						var endPt = [event.clientX, event.clientY];
+						var eventDimensions = [startPt, endPt];
+						var dx = eventDimensions[0][0];
+						var dy = eventDimensions[0][1];
+					
+						if (OKtoGoHere == true) {	
+							console.log("x is "+dx+"\nComparing "+dx+" and "+eventDimensions[1][0]);
+							var endTime = document.getElementById("timeSpanMsg"+eventCt);
+							if(dx < eventDimensions[1][0]) {
+								console.log("event_mine is "+eventDimensions[1][0] +" - "+dx+" px wide");
+								newEvent.style.width = (eventDimensions[1][0] - dx)+'px';		
+							} else {
+								var backwardWidth = dx;
+								dx = eventDimensions[1][0];
+								console.log("event_mine is made backwards. "+backwardWidth+" - "+dx+" px wide");
+								newEvent.style.top = endPt[1]+'px';
+								newEvent.style.width = (backwardWidth - dx)+'px';
+							}
+		
+							console.log("And y is "+dy+"\nComparing "+dy+" and "+eventDimensions[1][1]);
+							if(dy < eventDimensions[1][1]) {
+								console.log("event_mine is "+eventDimensions[1][1]+" - "+dy+" px high");
+								newEvent.style.height = (eventDimensions[1][1] - dy)+'px';	
+							} else {
+								var downwardHt = dy;
+								dy = eventDimensions[1][1];
+								console.log("event_mine is made upside down. "+downwardHt+" - "+dy+" px high");
+								newEvent.style.left = endPt[0]+'px';
+								newEvent.style.height = (downwardHt - dy)+'px';
+							}
+							rewriteTimes(eventCt, eventDimensions[0], eventDimensions[1]);
+						}		
+					})																			
+					.on('mouseup', function() {	
+						finalSize ();
+					});																	
+					
+				function rewriteTimes (t, s, e) {
+					var startTime = (writeEventTime(s) == 'Noon') 	? '12PM': writeEventTime(s);	// returns #AM/PM
+					var endTime = (writeEventTime(e) == 'Noon') 	? '12PM': writeEventTime(e);								// returns #AM/PM
+					console.log("Comparing "+startTime+" and "+endTime+":");
+					document.getElementById("timeSpanMsg"+t).innerHTML = (moment(startTime, 'h a').isSameOrBefore(moment(endTime, 'h a')))
+						? '<p>' + writeEventTime(s) + '-' + writeEventTime(e) + '</p>'
+						: '<p>' + writeEventTime(e) + '-' + writeEventTime(s) + '</p>';
 				}
-			
-				console.log("And y is "+dy+"\nComparing "+dy+" and "+eventDimensions[1][1]);
-				if(dy < eventDimensions[1][1]) {
-					console.log("event_mine is "+eventDimensions[1][1]+" - "+dy+" px high");
-					newEvent.style.height = (eventDimensions[1][1] - dy)+'px';	
-				} else {
-					var downwardHt = dy;
-					dy = eventDimensions[1][1];
-					console.log("event_mine is made upside down. "+downwardHt+" - "+dy+" px high");
-					newEvent.style.height = (downwardHt - dy)+'px';
-				}
-				var endTime = document.getElementById("timeSpanMsg"+eventCt);
-				timeEventHeader += writeEventTime(endPt) + '</p>';
-				endTime.innerHTML = timeEventHeader;
-				
-				var todo = document.createElement("span");
-					todo.setAttribute("id", "todo_"+eventCt);
-					todo.setAttribute("class", "todo");
-					todo.setAttribute("data-bind", "text: typeTodo");
-				newEvent.appendChild(todo);
-				
-				var makeEvent = document.createElement("form");
-					makeEvent.setAttribute("id", "make_event"+eventCt);
-					makeEvent.setAttribute("class", "make_event");
-					var descEvent = document.createElement("textarea");
-						descEvent.setAttribute("id", "make_event_txtarea"+eventCt);
-						descEvent.setAttribute("class", "make_event_txtarea");
-						descEvent.setAttribute("placeholder", "What do you regularly do now?");
-						descEvent.setAttribute("data-bind", "textInput: typeTodo");	
-					makeEvent.appendChild(descEvent);
+				function finalSize () {
+					newEvent.setAttribute("draggable", "true");
+					newEvent.setAttribute("ondrop", "rewriteTimes("+eventCt+", "+[newEvent.style.left, newEvent.style.top]+", "+[newEvent.style.right, newEvent.style.bottom]+")");
+					newEvent.setAttribute("onresize", "rewriteTimes("+eventCt+", "+[newEvent.style.left, newEvent.style.top]+", "+[newEvent.style.right, newEvent.style.bottom]+")");
+					var makeEvent = document.createElement("form");
+						makeEvent.setAttribute("id", "make_event"+eventCt);
+						makeEvent.setAttribute("class", "make_event");
+						var todo = document.createElement("span");
+							todo.setAttribute("id", "todo_"+eventCt);
+							todo.setAttribute("class", "todo");
+							todo.setAttribute("data-bind", "text: typeTodo");
+						newEvent.appendChild(todo);
+						var descEvent = document.createElement("textarea");
+							descEvent.setAttribute("id", "make_event_txtarea"+eventCt);
+							descEvent.setAttribute("class", "make_event_txtarea");
+							descEvent.setAttribute("placeholder", "What do you regularly do now?");
+							descEvent.setAttribute("data-bind", "textInput: typeTodo");	
+						makeEvent.appendChild(descEvent);
+					var thisEvent = document.getElementById("event_mine"+eventCt);
+					thisEvent.appendChild(makeEvent);	
+					
+					var vm = {
+						typeTodo: ko.observable('')
+					};
+					ko.applyBindings(vm, document.getElementById("event_mine"+eventCt));
+		
 					var cnfEventDesc = document.createElement("button");			//this can toggle show/hide the textarea
 						cnfEventDesc.setAttribute("id", "make_event_sbmtButn"+eventCt);
 						cnfEventDesc.setAttribute("class", "make_event_sbmtButn");
-						cnfEventDesc.setAttribute("type", "button");
-						cnfEventDesc.setAttribute("value", "Save");
+						cnfEventDesc.setAttribute("type", "submit");
+						cnfEventDesc.setAttribute("value", "OK");
 					makeEvent.appendChild(cnfEventDesc);
-				var thisEvent = document.getElementById("event_mine"+eventCt);
-				function vModel (){
-					this.typeTodo = ko.observable('');
-				};
-			  	var vm = new vModel();
-			   	ko.applyBindings(vm);
-				thisEvent.appendChild(makeEvent);
-				timeEventHeader = '<p>';											//reset
-				eventCt++;															//	writeTodoInfo();<- replaced by knockoutJS binding
+		// 				var timeEHeadClean = timeEventHeader.replace(/<\/?[^>]+(>|$)/g,'');
+		// 				var todoClean = todo.innerHTML.replace(/<\/?[^>]+(>|$)/g,'');
+ 				// 	makeEvent.setAttribute("action", "memorizeSched(mariocaiti@gmail.com, event_mine"+eventCt+", "+timeEHeadClean+", "+todoClean+");");
+ 		// 			makeEvent.setAttribute("method", "POST");
+					makeEvent.setAttribute("action", "javascript:hideTextBox("+eventCt+");");
+					eventCt++;														//	writeTodoInfo();<- replaced by knockoutJS binding
+				}
 			}
-		});																			//end onmouseup	
+		});					//end onmousedown
+		
 /*	function writeTodoInfo () {
 		var eventsList = document.getElementsByClassName("event_mine");
 		for (var e in eventsList) {
@@ -167,16 +198,17 @@
 	function writeEventTime (t) {
 		var alignBox = document.getElementsByClassName("hour_rect");	
 		for(var x=0; x<alignBox.length; x++) {
-			var alignSides = alignBox[x].getBoundingClientRect();
-// 			console.log("\tComparing "+alignSides.left+" with "+t[0]+" and "+alignSides.right+" with it as well.");
-// 			console.log("Also comparing "+alignSides.top+" with "+t[1]+" and "+alignSides.bottom+" with it as well.\n\tFrom "+alignBox[x].id);
+			var alignSides = alignBox[x].getBoundingClientRect();					// 	console.log("\tComparing "+alignSides.left+" with "+t[0]+" and "+alignSides.right+" with it as well.")("Also comparing "+alignSides.top+" with "+t[1]+" and "+alignSides.bottom+" with it as well.\n\tFrom "+alignBox[x].id);
 			if ( (alignSides.left < t[0]) && (alignSides.right > t[0]) && (alignSides.top < t[1]) && (alignSides.bottom > t[1]) ) {
 				var thisHr = alignBox[x].id;
-				var thisTimeFormat = thisHr.replace(/_/i,' ');	//parse Day of Week (remove underscore) and Hr
-				return thisTimeFormat;	 
+				var thisTimeFormat = thisHr.replace(/_/i,' ');						//parse Day of Week (remove underscore) and Hr
+				return (thisTimeFormat !== undefined) ? thisTimeFormat : false;	 	// must not go outside the hourly borders!
 			} 
 		}
-	}								
+	}	
+	function hideTextBox (c) {
+		document.getElementById("make_event_txtarea"+c).style.opacity = (document.getElementById("make_event_txtarea"+c).style.opacity == 1) ? 0 : 1;
+	}							
 	function addDay (dayOfMo, dayOfWk) {
 						/*	HEADER for day we are on.  times below vert along the edge, this should be to the right!	*/
 		var createCalDate = d3.select("body").append("div")
@@ -219,22 +251,45 @@
 			.attr('fill-opacity', '0.01');		// end creation of the individual hour cells
 			
 	}											//end addDay() function
-    function makeCalWeekly () {
+    function makeCal () {
     	var dayOfWk = 0;
     	var dayOfMo = 0;
-    	for(var x=0; x<7; x++) {
-    		dayOfWk = d.day(x).format("dddd");	// set day of the month to today 	//	console.log("current moment().day("+x+").format(weekday) is "+dayOfWk);
-    		if(x==d.day())
-    			dayOfMo = d.date();
-    		else
-    			dayOfMo = (x<d.day())
-					? d.date() - x
-					: d.date() + (x - d.date()); 									//	console.log("current moment().date().format(day of month) is "+dayOfMo);
-    		addDay(dayOfMo, dayOfWk);
-    	}										// once hours of week are all IDd then swap display days for TODAY, TOMORROW etc using currentDay vars
+   // 	if (window.innerWidth >= 640) {			//not mobile
+			for(var x=0; x<7; x++) {
+				dayOfWk = d.day(x).format("dddd");	// set day of the month to today 	//	console.log("current moment().day("+x+").format(weekday) is "+dayOfWk);
+				if(x==d.day())
+					dayOfMo = d.date();
+				else
+					dayOfMo = (x<d.day())
+						? d.date() - x
+						: d.date() + (x - d.date()); 									//	console.log("current moment().date().format(day of month) is "+dayOfMo);
+				addDay(dayOfMo, dayOfWk);
+			}										
+  //   	} else {								// mobile!
+//     		dayOfWk = d.day(0).format("dddd");	// set day of the month to today 	//	console.log("current moment().day("+x+").format(weekday) is "+dayOfWk);
+// 			dayOfMo = d.date();
+// 			addDay(dayOfMo - 1, dayOfWk - 1);
+// 			addDay(dayOfMo, dayOfWk);
+// 			addDay(dayOfMo + 1, dayOfWk + 1);												// once hours of week are all IDd then swap display days for TODAY, TOMORROW etc using currentDay vars
+//     	}
+    	addAbout();
     }
-    function memorizeSched () {
-    	//store in Mongo or local jSon?
+    function addAbout() {
+    	var abtStr = "This was written entirely in Javascript using D3, Moment and KnockoutJS libraries, and styled in SCSS. Back end to save your work and better mobile features are coming soon.";
+    	d3.select("body").append("div")
+			.attr('id', 'about')
+			.attr('class', 'about')
+			.append("text")
+				.text(abtStr);
+			
+    }
+    function memorizeSched (e, i, t, d) {
+    	//INSERT Into myItin VALUES(e, i, t, d);								// save with new eMail
+    	//UPDATE myItin SET time = t, desc = d WHERE eMail = e AND itemID = i;	// update this event by ID and conf eMail because 
+    	xhttp = new XMLHttpRequest();
+    	xhttp.open("POST", "save.py", true);									// or save.r or save.php
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("eMail="+e+"&itemID="+i+"&time="+t+"&desc="+d);
     }
     </script>
     
