@@ -27,9 +27,19 @@ visit_App
 		setWeeklyExpenses: function () {
 			var eRecap = 0;
 			for (var e in this.expenses){
-				eRecap += this.expenses[e].value;
+				if (this.salary < eRecap) {
+					alert("You are spending more than you make! Try your best to cut back on your planned expenses.");	
+					eRecap -= this.expenses[e-1].value;
+					this.expenses[e-1].value = 0;
+					console.log("Resetting "+this.expenses[e-1].label+" to zero.");
+					break;
+				} else {
+					eRecap += this.expenses[e].value;
+					console.log("Adding "+this.expenses[e].value+" to eRecap.");
+				}
 			}
-			this.weeklyExpenses = eRecap;			//	console.log("plan.weeklyExpenses is up to "+this.weeklyExpenses);
+			this.weeklyExpenses = eRecap;			
+			console.log("plan.weeklyExpenses is up to "+this.weeklyExpenses);
 			return this.weeklyExpenses;
 		},
 		goals: [],
@@ -66,15 +76,11 @@ visit_App
 		},
 		weeklyBudget: 0,
 		makeBudget: function () {
-			if ( (this.salary - this.setWeeklyExpenses() ) < 0)
-				alert("You are spending more than you make! Try your best to cut back on your planned expenses.");
-			else {
-				this.weeklyBudget = this.salary - this.setWeeklyExpenses();
-				for(gr in this.goals) {
-					 this.weeklyBudget -= parseInt(this.goals[gr].value);					
-				}
-				return this.weeklyBudget;
+			this.weeklyBudget = this.salary - this.setWeeklyExpenses();
+			for(gr in this.goals) {
+				 this.weeklyBudget -= parseInt(this.goals[gr].value);					
 			}
+			return this.weeklyBudget;
 		}
 	};
 });			

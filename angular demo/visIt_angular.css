@@ -1,23 +1,60 @@
-div {
-	-moz-transition:0.7s;
-    -ms-transition:0.7s;
-    -o-transition:0.7s linear all;
-    -webkit-transition:0.7s;
-    transition:0.7s;  
-	opacity: 1;
+.enterExpenses, .showGoals, .enterGoals, .goalsChart					{
+	-moz-animation: fadein 2s linear all;
+		-ms-animation:fadein 2s linear all;
+		-o-animation:fadein 2s linear all;
+		-webkit-animation:fadein 2s;
+		animation:fadein 2s; 
 }
-.enterExpenses.ng-hide, .showGoals.ng-hide, .goalsChart.ng-hide {
+@keyframes fadein {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+/* Firefox */
+@-moz-keyframes fadein {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes fadein {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}​
+
+/* Opera */
+@-o-keyframes fadein {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+.enterExpenses.ng-show, .showGoals.ng-show, .goalsChart.ng-show {
+	display:block!important; 		/*	to enable slide in effect in mobile	*/
+}
+.enterExpenses.ng-hide, .showGoals.ng-hide, .goalsChart.ng-hide { 
 	opacity: 0;
 }
-.enterExpenses.ng-show, .showGoals.ng-show, .goalsChart.ng-show {
-	display:block!important;
+p, label					{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 0.9em;
+}
+label:hover			{
+	font-weight: bold;
+}
+input						{
+	width:12vw;
 }
 .goalsChart			 {
 	text-align: right;	
-  	padding: 3px;
-  	margin: 1px;
+	padding: 3px;
+	margin: 1px;
 }
-
 .enterHomeBudget, .houseBudgetResult		{
 	background-color:#defdaa;
 }
@@ -45,31 +82,29 @@ div {
 .enterNerdBudget, .nerdBudgetResult			{
 	background-color:#dedcde;
 }
-
-label:hover			{
-	font-weight: bold;
-}
+/* 
 
 p					{
-	font-family: "Arial", sans-serif;
+	font-family: 'Open Sans', sans-serif;
 	text-align: right;	
-		
+	
 	-moz-transition: 4s;
-    -ms-transition: 4s;
-    -o-transition: 4s;
-    -webkit-transition: 4s;
-    transition: 4s; 
+	-ms-transition: 4s;
+	-o-transition: 4s;
+	-webkit-transition: 4s;
+	transition: 4s; 
 }
+ */
 
 /*.ui-icon{
-    background-image: url(http://code.jquery.com/mobile/1.1.0/images/icons-18-black.png);
+	background-image: url(http://code.jquery.com/mobile/1.1.0/images/icons-18-black.png);
 }*/
 .footer				{
 	position: absolute;
-  	bottom: 0px !important;
-  	padding: 3px;
-  	margin: 10px;
-  	opacity:0;
+	bottom: 0px !important;
+	padding: 3px;
+	margin: 10px;
+	opacity:0;
 }
 .showPyButton		{
 	background-color:#aaffaa;

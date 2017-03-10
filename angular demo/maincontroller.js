@@ -8,7 +8,7 @@ visit_App
 		plan.newExpense("Groceries", "enterGroceries", 0);
 		plan.newExpense("Your car, commute or other transportation", "enterCommute", 0);
 		plan.newExpense("Utilities", "enterUtils", 0);
-		plan.newExpense("Home entertainment, cable, internet, DVD subscriptions", "enterTainment", 0);
+		plan.newExpense("TV, cable, internet, movies, music", "enterTainment", 0);
 		plan.newExpense("Kids' college fund", "enterKids", 0);
 
 		plan.newGoal("Home", "Buying a home", "expHome", 0, "houseBudgetResult");

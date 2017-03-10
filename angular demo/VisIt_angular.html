@@ -7,15 +7,17 @@
 <title>Visualize It! (for angular JS)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">		<!-- for bootstrap scaling-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js" type="text/javascript">
-</script>																		<!-- declare angular	-->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js" type="text/javascript">
+</script>																									<!-- declare angular	-->
 <script src="maincontroller.js" type="text/javascript"></script>				<!-- root controller	-->
-<script src="plan.js" type="text/javascript"></script>							<!-- and the plan class file	-->
-<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">								<!-- declare bootstrap in bootstrap/css/ when live-->
-<link href="visIt_angular.css" rel="stylesheet">								<!-- my custom CSS, rewrite in Sass or SCSS? -->
+<script src="plan.js" type="text/javascript"></script>								<!-- and the plan class file	-->
+<link href="/cgi-bin/bootstrap/css/bootstrap.min.css" rel="stylesheet">			<!-- declare bootstrap in bootstrap/css/ when live-->
+<link href="visIt_angular.css" rel="stylesheet">												<!-- my custom CSS, rewrite in Sass or SCSS? -->
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 </head>
 <body>
-<script src="bootstrap/css/bootstrap.min.js"></script>										<!-- declare bootstrap JS for modal below -->
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>						<!-- jQuery is required for Bootstrap JS	-->
+<script src="/cgi-bin/bootstrap/js/bootstrap.min.js"></script>					<!-- declare bootstrap JS for modal below -->
 <header id="myHeader" class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<div class="row, col-lg-2 col-md-2 col-sm-2 col-xs-4">
 	<a href="http://www.mariocaiti.com">
@@ -38,18 +40,21 @@
 				ng-model-options="{updateOn: 'blur'}" />
 			<button ng-show="enterSalary>0" ng-click="write_SalAcknowlegemt(enterSalary); showExpenses=true">&#x25BA;</button>
 		</div>
-		<div id="enterExpenses" class="col-lg-6 col-md-6 col-sm-12, enterExpenses" ng-show="showExpenses">
+		<div id="enterExpenses" class="col-lg-6 col-md-6 col-sm-12, enterExpenses" 
+			ng-show="showExpenses">
 			<span ng-bind="myPlan.salary | currency"></span><span ng-bind="acknowledgement"></span>
 			<br>Now we need a breakdown of what you spend on a <em>weekly</em> basis. Just divide your monthly bill by 4.<br>
 		
 			<div ng-repeat="t in myPlan.expenses">
-			<ng-form name="updateExpense">
-				<label>{{t.label}}</label>
-					<input type='number' step="0.01" min="0" 
+				<ng-form name="updateExpense">
+					<label>{{t.label}}</label>
+					<input
+						type='number' step="0.01" min="0" 
 						ng-model="t.value"
 						ng-model-options="{updateOn: 'blur'}" 
 						ng-change="myPlan.setExpenseAmt(t, t.value); myPlan.makeBudget()"/>
-					<span ng-bind="t.value | currency"></span><br>
+					<span
+						ng-bind="t.value | currency"></span><br>
 				</ng-form>
 			</div>
 			-----------------------------------------<br>
@@ -79,22 +84,22 @@
 		</div>
 		<div id="goalsChart" 
 			class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12, goalsChart" 
-			style="max-height:{{myPlan.weeklyBudget| number:0}}px;"
-			ng-show="showGoals">
+			style="height:1vh;"	
+			ng-show="showGoals"><!-- {{myPlan.weeklyBudget / 56| number:0}} -->
 			<div ng-repeat="r in myPlan.goals">
 				<div id="{{r.chartName}}" 
-					class="col-lg-1 col-md-1 col-sm-1 col-xs-12, {{r.chartName}}" 
-					style="max-height:{{r.value | number:0}}px;">
-					<p style="font-size:{{r.value / 2 | number:0}}px;">
+					class="col-lg-1 col-md-1 col-sm-1 col-xs-12, {{r.chartName}}" > 
+					<p style="font-size:{{r.value / 48 | number:0}}em; top:-{{(r.value / 7) + (r.value / 48)| number:0}}vh">
 						{{r.value | currency}} +
-					</p>  
+					</p> 
+					<div style="max-height:{{0.1 + (r.value / 7) | number:1}}vh"></div>
 				</div>
 				<div class="visible-xs">
 					<br>
 				</div>
 			</div>
-			<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12"> 
-				= <p ng-bind="myPlan.makeBudget() | currency" style="font-size:{{myPlan.makeBudget()| number:0}}px;"></p>
+			<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12"> 
+				<p ng-bind=" ' = ' + (myPlan.makeBudget() | currency)" style="font-size:{{myPlan.makeBudget() / 56 | number:0}}em;"></p>
 			</div>
 		</div>
 	</div>	<!-- end mainController div-->
@@ -106,19 +111,24 @@
 
 <footer id="myFooter" class="row, col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<br><b>So WTF is this?</b>
-	<br>I write versions of this calculator to learn a new language or platform, and this season AngularJS and Bootstrap are in. 
-	<br>I've also written this in
+	<p>I write versions of this calculator to learn a new language or platform, and this season AngularJS and Bootstrap are in.</p> 
+	<p>I've also written this in
 		<a data-toggle="modal" data-target="#pyPopup">
 			Python
 		</a> 
-	and <a href="clips/VisualiseIt_03.swf" target="_blank">Actionscript 3. Flash? Yes, Flash</a>.
+	and <a href="clips/VisualiseIt_03.swf" target="_blank">Actionscript 3. Flash? Yes, Flash</a>.</p>
 	<br><b>UPDATED April 1 2016</b>. No foolin'... 
-	I remodeled the infrastructure to be factory class based and updated the graph to reflect a more modern Angular+CSS style. 
-	(we await version 2 with bated breath!)
-	<br>If you don't like to click View Source you can review my <a href="https://github.com/mariocaiti/my-code-portfolio">Github</a>. 
-	I've got lots of stuff there in various states of completion.
-	<br>I look forward to doing Java for Android and Swift for iOS next.
-	<br><a href="http://mariosphpworkshop.drupalgardens.com" target="_blank">I need a job</a>
+	<p>I remodeled the infrastructure to be factory class based and updated the graph to reflect a more modern Angular+CSS style. </p>
+	<br><b>UPDATED AGAIN February 20, 2017</b><br>
+	<p>A full front end cleanup to improve performance and make it prettier on my phone and Macbook. I like Google Fonts. :)<br> 
+	The animations favor the Bootstrap and good old CSS transitions over the Angular transitions that don't sync with my old Bizland server.
+	<br>Therefore, I may need to put this on Heroku to demonstrate my nodeJS capabilities.</p>
+	<p>I also fixed some bugs in the object factory that were making it pretty user unfriendly, which is always bad.</p>
+	<br><br>
+	<p>If you don't like to click View Source you can review my <a href="https://github.com/mariocaiti/my-code-portfolio">Github</a>. 
+	I'll update this there soon. :) I've got lots of stuff there in various states of completion.
+	<br>I look forward to doing Java for Android and Swift for iOS next.</p>
+	<br><a href="http://mariocaiti.com/dev" target="_blank">Go Home</a>
 	<!-- python code modal	-->
 	<div class="modal fade" id="pyPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog" role="document">
@@ -129,7 +139,9 @@
 		  </div>
 		  <div class="modal-body">
 			<div id="pyCode" class="pyCode">
-				Add code here.
+				<code>
+				Actually, I'm revamping this with a properly routed single page app and SQL storage of your results. It's coming soon, because Python is great like that.
+				</code>
 			</div>
 		  </div>
 		  <div class="modal-footer">
