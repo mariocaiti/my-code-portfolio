@@ -29,18 +29,6 @@ class MyTests(TestCase):
 #     def test_some_json(self):
 #     	response = self.client.get("/")
 #         self.assertEquals(response.json, dict(success=True))
-        	
-# class SanityTest(object):
-#     def __init__(self, val):
-#         self.val = val
-# 
-#     def __eq__(self, other):
-#         return self.val == other.val
-# 
-# def test_compare():
-#     f1 = Foo(2)
-#     f2 = Foo(3)
-#     assert f1 == f2
 	
     ## How to run with terminal, starting from 'flask_app' root directory:
 	#     source bin/activate							<- starts the virtual environment
