@@ -1,0 +1,21 @@
+{% from "_formhelpers.html" import render_field %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
+<form method=post>
+Welcome!
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+Login here, please:<br>
+  <dl>
+    {{ render_field(form.username) }}	<a class="crossLink" href="/register">I don't have one</a>
+
+    {{ render_field(form.password) }}		<a class="crossLink" href="/retrievePwd">I don't know this</a>
+  </dl>
+  <p><input type=submit value=Login>
+</form>

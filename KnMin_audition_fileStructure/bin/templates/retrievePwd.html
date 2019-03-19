@@ -1,0 +1,18 @@
+{% from "_formhelpers.html" import render_field %}
+<form method=post>
+<p>OK, we can get you logged in. First, enter your username.</p>
+  <dl>
+    {{ render_field(form.username) }}
+    <p>If you don't know this, you must enter your information below as you registered it with us.</br>
+    If you don't have this information, please call us to update your information.</p>
+  </dl>
+Now enter one of the fields below to get a temporary password.<br>
+  <dl>
+    {{ render_field(form.eMail) }}
+  </dl>
+  <p><input type="submit" name="submitEmailBtn" value=SendEMail>
+    <dl>
+    {{ render_field(form.phone) }}
+  </dl>
+  <p><input type="submit" name="reqSMSBtn"  value=SendText>
+</form>

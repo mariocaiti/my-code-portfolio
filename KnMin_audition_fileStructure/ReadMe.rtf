@@ -1,0 +1,127 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fmodern\fcharset0 Courier;\f2\fnil\fcharset0 LucidaGrande;
+}
+{\colortbl;\red255\green255\blue255;\red5\green68\blue254;\red217\green11\blue5;}
+{\*\expandedcolortbl;;\cssrgb\c0\c38136\c99824;\cssrgb\c88946\c14202\c0;}
+\margl1440\margr1440\vieww24740\viewh18660\viewkind1
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs32 \cf0 AUTHENTICATION PAGE LOGIN README\
+\
+
+\i Which application did you choose to develop and why?
+\i0 \
+#3: The authentication server, because understanding and implementing security in every app we create is just not optional. However, neither is a positive UI/UX experience. So my goals with this exercise was to make a login process as intuitive and fast as possible.\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\qc\partightenfactor0
+
+\b \cf0 How to use/test\uc0\u8203  the provided application
+\b0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 The structure is as follows: \
+The 
+\b \ul root file
+\b0 \ulnone  is 
+\f1 \cf2 km_audition.py
+\f0 \cf0 . I created a Flask app by running the following terminal command:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f1 \cf3 virtualenv flask_app\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0 \cf0 \
+The root file is in \ul flask_app/bin\ulnone , which contains important files to run the Flask framework.\
+The /bin directory must also include the following folders, subfolders, and files which serve the app:\
+\
+
+\fs30 /templates \
+	_formhelpers.html (file for the other HTML view pages to include)\
+	login.html\
+	retrievePwd.html\
+	register.html\
+	private.html\
+\
+/static\
+	/styles\
+		styles.css\
+\
+/tests\
+	km_audition_tests.py\
+
+\i\fs32 What Operating System (+ service pack) and libraries are required?
+\i0 \
+I chose Python from the options, which seems to have much better performance and reliability than PHP or node.js, currently. But I could be wrong.\
+\
+
+\i Any design decisions or behavioral clarifications\uc0\u8203  that illustrate how your program functions, and why?
+\i0 \
+\
+
+\b If you use any external libraries or code-snippets, you must \uc0\u8203 provide the following information for each (credit must be given)\
+
+\b0 \
+I developed using the Flask framework to take out the heavy lifting and be able to concentrate on solving problems. \
+For JWT implementation, I upgraded the library I was using to flask_jwt_extended, which makes generating tokens more reliable. References: https://pythonhosted.org/Flask-JWT/\
+Finally, I set up unit testing with Flask_testing, the basic library for unit testing, ay purest to run it.\
+\
+Name\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f2 \cf0 \uc0\u9675 
+\f0  Version\
+
+\f2 \uc0\u9675 
+\f0  Purpose\
+
+\f2 \uc0\u9675 
+\f0  License\
+
+\f2 \uc0\u9675 
+\f0  Website(s)\
+ 
+\i \
+What tools/libraries (and versions) are necessary to use and test your application?
+\i0 \
+\
+\
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\fs28 \cf0 TASK LIST
+\fs32 \
+\
+
+\fs28 1. Establishes an active session through the use of cookies upon successful login\
+	Done!\
+\
+2. Returns a JWT (JSON Web Token) in the response				Done!\
+\
+3. Provides a way to validate the JWT on server\
+	Tokens are established and controlled by the routing flow established in this file. I tested logging in and out with several dummy accounts.\
+\
+4. Provides a way to logout in order to destroy the cookie and session\
+	Done!\
+\
+EXTRA CREDIT\
+\
+Implement two-factor authentication\
+	I am limited by security precautions on my house MacBook, which is not exactly a server! I have a plan as to how to use the available tools to do this, though, as outlined in the root file\'92s comments.\
+\
+Store user information in a self contained database (e.g. SQLite, LevelDB, etc.)\
+	I prefer mySQL and have used it with Flask in the past. For this exercise, I did not get to set it up.\
+\
+User account creation\
+	This works in the testing environment, and I tested creating and logging in with dummy accounts.\
+\
+A client web page using the authentication service\
+	The app is based around the /private page which I tested logging in and out of.\
+\
+Unit tests\
+	This file is in /tests. Instructions are in comments.\
+
+\fs32 \
+\
+}
